@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import redirect
 from django.utils.cache import add_never_cache_headers
 
@@ -8,7 +9,10 @@ from .backends import S3Boto3StorageForWagtailDocument
 from .utils import is_s3_boto3_storage_used
 
 
-@hooks.register('before_serve_document', order=100)
+HOOK_ORDER = getattr(settings, 'WAGTAIL_STORAGES_DOCUMENT_HOOK_ORDER', 100)
+
+
+@hooks.register('before_serve_document', order=HOOK_ORDER)
 def serve_document_from_s3(document, request):
     # Skip this hook if not using django-storages boto3 backend.
     if not is_s3_boto3_storage_used():
