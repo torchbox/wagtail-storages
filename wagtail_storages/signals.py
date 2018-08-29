@@ -1,7 +1,6 @@
 import logging
 from django.conf import settings
 from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 from wagtail.contrib.frontend_cache.utils import PurgeBatch
 from wagtail.core.models import Collection
@@ -28,7 +27,8 @@ def update_document_s3_acls_when_collection_saved(sender, instance, **kwargs):
     documents = Document.objects.filter(collection=instance)
     for document in documents:
         logger.debug(
-            'Collection saved, set ACL to "%s" on "%s"',
+            'Collection "%s" saved, set ACL to "%s" on "%s"',
+            instance.name,
             acl,
             document.file.name
         )
@@ -54,7 +54,6 @@ def purge_document_from_cache_when_saved(sender, instance, **kwargs):
     batch.purge(backend_settings=WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE)
 
 
-@receiver(post_save, sender=Collection)
 def purge_documents_when_collection_saved_with_restrictions(sender, instance,
                                                             **kwargs):
     if not instance.get_view_restrictions():
