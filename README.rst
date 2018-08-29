@@ -53,7 +53,7 @@ e.g.
 
 .. code:: python
 
-   WAGTAIL_STORAGES_DOCUMENT_HOOK_ORDER = {
+   WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE = {
        'cloudfront': {
            'BACKEND': 'wagtail.contrib.frontend_cache.backends.CloudfrontBackend',
            'DISTRIBUTION_ID': 'your-distribution-id',
