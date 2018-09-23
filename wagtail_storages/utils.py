@@ -1,7 +1,10 @@
-from django.core.files.storage import get_storage_class
+import django
 
-from storages.backends.s3boto3 import S3Boto3Storage
+import storages
 
 
 def is_s3_boto3_storage_used():
-    return issubclass(get_storage_class(), S3Boto3Storage)
+    return issubclass(
+        django.core.files.storage.get_storage_class(),
+        storages.backends.s3boto3.S3Boto3Storage
+    )

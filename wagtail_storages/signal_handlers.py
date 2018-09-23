@@ -6,7 +6,7 @@ from wagtail.contrib.frontend_cache.utils import PurgeBatch
 from wagtail.core.models import Collection
 from wagtail.documents.models import get_document_model
 
-from .utils import is_s3_boto3_storage_used
+from wagtail_storages.utils import is_s3_boto3_storage_used
 
 Document = get_document_model()
 
@@ -74,22 +74,23 @@ def purge_documents_when_collection_saved_with_restrictions(sender, instance,
     batch.purge(backend_settings=WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE)
 
 
-if is_s3_boto3_storage_used():
-    post_save.connect(
-        update_document_s3_acls_when_collection_saved, sender=Collection
-    )
-    post_save.connect(
-        update_document_s3_acls_when_document_saved, sender=Document
-    )
-    if WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE:
+def register_signal_handlers():
+    if is_s3_boto3_storage_used():
         post_save.connect(
-            purge_document_from_cache_when_saved, sender=Document
+            update_document_s3_acls_when_collection_saved, sender=Collection
         )
         post_save.connect(
-            purge_documents_when_collection_saved_with_restrictions,
-            sender=Collection
+            update_document_s3_acls_when_document_saved, sender=Document
         )
-        post_save.connect(
-            purge_documents_when_collection_saved_with_restrictions,
-            sender=Collection
-        )
+        if WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE:
+            post_save.connect(
+                purge_document_from_cache_when_saved, sender=Document
+            )
+            post_save.connect(
+                purge_documents_when_collection_saved_with_restrictions,
+                sender=Collection
+            )
+            post_save.connect(
+                purge_documents_when_collection_saved_with_restrictions,
+                sender=Collection
+            )

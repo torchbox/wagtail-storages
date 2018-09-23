@@ -1,25 +1,24 @@
-from django.core.management.base import BaseCommand, CommandError
+import django
 
-from wagtail.core.models import Collection
-from wagtail.documents.models import get_document_model
+import wagtail
 
-from wagtail_storages.utils import is_s3_boto3_storage_used
-
-
-Document = get_document_model()
+from wagtail_storages import utils
 
 
-class Command(BaseCommand):
+Document = wagtail.documents.models.get_document_model()
+
+
+class Command(django.core.management.base.BaseCommand):
     help = "Fix documents' ACLs on S3 to match their collection settings"
 
     def handle(self, *args, **options):
         self.verbosity = options['verbosity']
-        if not is_s3_boto3_storage_used():
-            raise CommandError(
+        if not utils.is_s3_boto3_storage_used():
+            raise django.core.management.base.CommandError(
                 'Your storage needs to be set to S3Boto3Storage in order to '
                 'use this command.'
             )
-        for collection in Collection.objects.all():
+        for collection in wagtail.core.models.Collection.objects.all():
             if collection.get_view_restrictions():
                 acl = 'private'
             else:
