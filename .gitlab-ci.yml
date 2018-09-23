@@ -1,0 +1,72 @@
+image: python:3
+
+before_script:
+  - pip install tox
+
+stages:
+  - lint
+  - test
+
+flake8:
+  stage: lint
+  script:
+    - tox -e flake8
+
+isort:
+  stage: lint
+  script:
+    - tox -e isort
+
+py34-dj20-wagtail22:
+  image: python:3.4
+  stage: test
+  script:
+    - tox -e py35-dj20-wagtail22
+
+py35-dj20-wagtail22:
+  image: python:3.5
+  stage: test
+  script:
+    - tox -e py35-dj20-wagtail22
+
+py36-dj20-wagtail22:
+  image: python:3.6
+  stage: test
+  script:
+    - tox -e py36-dj20-wagtail22
+
+py37-dj20-wagtail22:
+  image: python:3.7
+  stage: test
+  script:
+    - tox -e py37-dj20-wagtail22
+
+py35-dj20-wagtal22:
+  image: python:3.5
+  stage: test
+  script:
+    - tox -e py35-dj20-wagtail22
+
+py36-dj20-wagtail22:
+  image: python:3.6
+  stage: test
+  script:
+    - tox -e py36-dj20-wagtail22
+
+py37-dj20-wagtail22:
+  image: python:3.7
+  stage: test
+  script:
+    - tox -e py37-dj20-wagtail22
+
+py37-dj20-wagtail21:
+  image: python:3.7
+  stage: test
+  script:
+    - tox -e py37-dj20-wagtail21
+
+py37-dj20-wagtail20:
+  image: python:3.7
+  stage: test
+  script:
+    - tox -e py37-dj20-wagtail20
