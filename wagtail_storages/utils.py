@@ -1,6 +1,6 @@
 import django
 
-import storages
+import storages.backends.s3boto3
 
 
 def is_s3_boto3_storage_used():

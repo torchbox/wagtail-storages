@@ -4,7 +4,6 @@ import wagtail
 
 from wagtail_storages import utils
 
-
 Document = wagtail.documents.models.get_document_model()
 
 

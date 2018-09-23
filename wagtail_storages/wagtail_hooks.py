@@ -4,7 +4,6 @@ import wagtail
 
 from wagtail_storages import backends, utils
 
-
 HOOK_ORDER = getattr(
     django.conf.settings,
     'WAGTAIL_STORAGES_DOCUMENT_HOOK_ORDER',
