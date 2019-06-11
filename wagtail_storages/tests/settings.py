@@ -13,6 +13,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'wagtail.documents',
+    'wagtail.users',
+    'wagtail.core',
+    'taggit',
 ]
 
 TEMPLATES = [
