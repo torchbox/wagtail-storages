@@ -46,7 +46,7 @@ DATABASES = {
 
 ROOT_URLCONF = 'wagtail_storages.tests.urls'
 
-AWS_STORAGE_BUCKET_NAME='test'
+AWS_STORAGE_BUCKET_NAME = 'test'
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
