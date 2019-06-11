@@ -34,7 +34,8 @@ class AmazonS3DocumentTests(TestCase):
         self.priv_col = CollectionViewRestrictionFactory(
             collection=self.private_collection
         )
-        self.view_restriction_key = self.priv_col.passed_view_restrictions_session_key
+        # View restriction session key
+        self.restr_key = self.priv_col.passed_view_restrictions_session_key
 
     def test_create_public_document(self):
         # Create document.
@@ -69,7 +70,7 @@ class AmazonS3DocumentTests(TestCase):
         # Authorise the session.
         s = self.client.session
         s.update({
-            self.view_restriction_key: [self.priv_col.id],
+            self.restr_key: [self.priv_col.id],
         })
         s.save()
 

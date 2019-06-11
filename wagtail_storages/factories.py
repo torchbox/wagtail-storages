@@ -1,7 +1,8 @@
-import factory
-import factory.django
 from wagtail.core.models import Collection, CollectionViewRestriction
 from wagtail.documents.models import Document
+
+import factory
+import factory.django
 
 
 class DocumentFactory(factory.django.DjangoModelFactory):
