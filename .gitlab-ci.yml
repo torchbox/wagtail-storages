@@ -17,11 +17,12 @@ isort:
   script:
     - tox -e isort
 
+# Wagtail 2.2
 py34-dj20-wagtail22:
   image: python:3.4
   stage: test
   script:
-    - tox -e py35-dj20-wagtail22-factory
+    - tox -e py34-dj20-wagtail22-factory
 
 py35-dj20-wagtail22:
   image: python:3.5
@@ -41,29 +42,49 @@ py37-dj20-wagtail22:
   script:
     - tox -e py37-dj20-wagtail22-factory
 
-py35-dj20-wagtal22:
+# Wagtail 2.1
+py34-dj20-wagtail21:
+  image: python:3.4
+  stage: test
+  script:
+    - tox -e py34-dj20-wagtail21-factory
+
+py35-dj20-wagtail21:
   image: python:3.5
   stage: test
   script:
-    - tox -e py35-dj20-wagtail22-factory
+    - tox -e py35-dj20-wagtail21-factory
 
-py36-dj20-wagtail22:
+py36-dj20-wagtail21:
   image: python:3.6
   stage: test
   script:
-    - tox -e py36-dj20-wagtail22-factory
-
-py37-dj20-wagtail22:
-  image: python:3.7
-  stage: test
-  script:
-    - tox -e py37-dj20-wagtail22-factory
+    - tox -e py36-dj20-wagtail21-factory
 
 py37-dj20-wagtail21:
   image: python:3.7
   stage: test
   script:
     - tox -e py37-dj20-wagtail21-factory
+
+# Wagtail 2.0
+py34-dj20-wagtail20:
+  image: python:3.4
+  stage: test
+  script:
+    - tox -e py34-dj20-wagtail20-factory
+
+py35-dj20-wagtail20:
+  image: python:3.5
+  stage: test
+  script:
+    - tox -e py35-dj20-wagtail20-factory
+
+py36-dj20-wagtail20:
+  image: python:3.6
+  stage: test
+  script:
+    - tox -e py36-dj20-wagtail20-factory
 
 py37-dj20-wagtail20:
   image: python:3.7
