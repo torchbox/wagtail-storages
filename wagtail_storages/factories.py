@@ -6,7 +6,7 @@ import factory.django
 
 
 class DocumentFactory(factory.django.DjangoModelFactory):
-    title = factory.Sequence(lambda n: f"document {n}")
+    title = factory.Sequence(lambda n: 'document' + str(n))
     file = factory.django.FileField(
         filename="testfile.txt",
         data=b'Test document',
@@ -17,7 +17,7 @@ class DocumentFactory(factory.django.DjangoModelFactory):
 
 
 class CollectionFactory(factory.django.DjangoModelFactory):
-    name = factory.Sequence(lambda n: f"Collection {n}")
+    name = factory.Sequence(lambda n: 'Collection' + str(n))
     depth = 0
 
     class Meta:
