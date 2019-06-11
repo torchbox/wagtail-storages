@@ -61,6 +61,7 @@ class AmazonS3DocumentTests(TestCase):
         response = self.client.get(url)
 
         # Test wagtail redirects to S3.
+        self.assertEquals(response.status_code, 302)
         self.assertTrue(response.url)
         # Check the url given wasn't signed.
         self.assertFalse(self.check_url_signed(response.url))
@@ -90,6 +91,7 @@ class AmazonS3DocumentTests(TestCase):
         response = self.client.get(url)
 
         # Test wagtail redirects to S3.
+        self.assertEquals(response.status_code, 302)
         self.assertTrue(response.url)
         # Check the url given was signed.
         self.assertTrue(self.check_url_signed(response.url))
