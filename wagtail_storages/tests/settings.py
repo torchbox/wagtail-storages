@@ -18,6 +18,8 @@ INSTALLED_APPS = [
     'wagtail.users',
     'wagtail.core',
 
+    'wagtail_storages',
+
     'storages',
     'taggit',
 ]

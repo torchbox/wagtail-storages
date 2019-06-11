@@ -1,5 +1,6 @@
 from urllib.parse import urlparse
 
+from django.conf import settings
 from django.test import TestCase, override_settings
 from django.test.client import Client
 from django.urls import reverse
@@ -7,17 +8,15 @@ from django.urls import reverse
 from wagtail.core.models import Collection
 
 import boto3
-
 from moto import mock_s3
 
 from ..factories import CollectionViewRestrictionFactory, DocumentFactory
 
 
+@mock_s3
 @override_settings(
     DEFAULT_FILE_STORAGE='storages.backends.s3boto3.S3Boto3Storage',
-    AWS_STORAGE_BUCKET_NAME='test',
 )
-@mock_s3
 class AmazonS3DocumentTests(TestCase):
     def check_s3_url(self, url):
         return 's3.amazonaws.com' in url
