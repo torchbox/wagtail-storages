@@ -6,7 +6,7 @@ import factory.django
 
 
 class DocumentFactory(factory.django.DjangoModelFactory):
-    title = factory.Sequence(lambda n: 'document' + str(n))
+    title = factory.Sequence(lambda n: 'Document' + str(n))
     file = factory.django.FileField(
         filename="testfile.txt",
         data=b'Test document',
