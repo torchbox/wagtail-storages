@@ -31,8 +31,10 @@ class AmazonS3DocumentTests(TestCase):
         self.private_collection = self.root_collection.add_child(
             name='Restricted collection',
         )
-        self.private_collection_restriction = CollectionViewRestrictionFactory(collection=self.private_collection)
-        self.view_restriction_session_key = self.private_collection_restriction.passed_view_restrictions_session_key
+        self.priv_col = CollectionViewRestrictionFactory(
+            collection=self.private_collection
+        )
+        self.view_restriction_key = self.priv_col.passed_view_restrictions_session_key
 
     def test_create_public_document(self):
         # Create document.
@@ -42,7 +44,10 @@ class AmazonS3DocumentTests(TestCase):
         self.assertTrue(self.check_s3_url(document.file.url))
 
         # Load the document
-        url = reverse('wagtaildocs_serve', args=(document.id, document.filename))
+        url = reverse(
+            'wagtaildocs_serve',
+            args=(document.id, document.filename),
+        )
         response = self.client.get(url)
 
         # Test wagtail redirects to S3.
@@ -64,12 +69,15 @@ class AmazonS3DocumentTests(TestCase):
         # Authorise the session.
         s = self.client.session
         s.update({
-            self.view_restriction_session_key: [self.private_collection_restriction.id],
+            self.view_restriction_key: [self.priv_col.id],
         })
         s.save()
 
         # Load the document
-        url = reverse('wagtaildocs_serve', args=(document.id, document.filename))
+        url = reverse(
+            'wagtaildocs_serve',
+            args=(document.id, document.filename),
+        )
         response = self.client.get(url)
 
         # Test wagtail redirects to S3.

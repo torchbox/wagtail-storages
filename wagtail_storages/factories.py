@@ -6,7 +6,10 @@ from wagtail.documents.models import Document
 
 class DocumentFactory(factory.django.DjangoModelFactory):
     title = factory.Sequence(lambda n: f"document {n}")
-    file = factory.django.FileField(filename="testfile.txt", data=b'Test document')
+    file = factory.django.FileField(
+        filename="testfile.txt",
+        data=b'Test document',
+    )
 
     class Meta:
         model = Document
