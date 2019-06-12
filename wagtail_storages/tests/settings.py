@@ -48,7 +48,10 @@ DATABASES = {
 
 ROOT_URLCONF = 'wagtail_storages.tests.urls'
 
+AWS_DEFAULT_ACL = 'private'
 AWS_STORAGE_BUCKET_NAME = 'test'
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',

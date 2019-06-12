@@ -14,10 +14,6 @@ from ..factories import CollectionViewRestrictionFactory, DocumentFactory
 
 
 @mock_s3
-@override_settings(
-    DEFAULT_FILE_STORAGE='storages.backends.s3boto3.S3Boto3Storage',
-    AWS_DEFAULT_ACL='private',
-)
 class AmazonS3DocumentTests(TestCase):
     def check_s3_url(self, url):
         return 's3.amazonaws.com' in url
