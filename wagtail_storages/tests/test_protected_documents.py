@@ -16,6 +16,7 @@ from ..factories import CollectionViewRestrictionFactory, DocumentFactory
 @mock_s3
 @override_settings(
     DEFAULT_FILE_STORAGE='storages.backends.s3boto3.S3Boto3Storage',
+    AWS_DEFAULT_ACL='private',
 )
 class AmazonS3DocumentTests(TestCase):
     def check_s3_url(self, url):
@@ -35,8 +36,9 @@ class AmazonS3DocumentTests(TestCase):
 
     def setUp(self):
         # Create S3 bucket
+        bucket_name = settings.AWS_STORAGE_BUCKET_NAME
         conn = boto3.resource('s3', region_name='eu-west-1')
-        conn.create_bucket(Bucket='test')
+        conn.create_bucket(Bucket=bucket_name)
 
         self.client = Client()
         self.root_collection = Collection.get_first_root_node()
