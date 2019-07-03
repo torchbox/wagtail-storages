@@ -32,10 +32,13 @@ class AmazonS3DocumentTests(TestCase):
         return True
 
     def check_document_is_public(self, document):
+        all_users = 'http://acs.amazonaws.com/groups/global/AllUsers'
         # Loop over all the grants.
         for grant in document.file.file.obj.Acl().grants:
             # Find the all users grantee.
-            if 'URI' in grant['Grantee'] and grant['Grantee']['URI'] == 'http://acs.amazonaws.com/groups/global/AllUsers':
+            if 'URI' not in grant['Grantee']:
+                continue
+            if grant['Grantee']['URI'] == all_users:
                 if grant['Permission'] == 'READ':
                     return True
         return False
