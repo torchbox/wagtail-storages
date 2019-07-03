@@ -1,5 +1,3 @@
-import datetime
-
 from wagtail.core.models import Collection, CollectionViewRestriction
 from wagtail.documents.models import get_document_model
 
@@ -7,6 +5,7 @@ import factory
 import factory.django
 
 Document = get_document_model()
+
 
 class DocumentFactory(factory.django.DjangoModelFactory):
     title = factory.Sequence(lambda n: 'Document' + str(n))

@@ -1,7 +1,7 @@
 from urllib.parse import urlparse
 
 from django.conf import settings
-from django.test import TestCase, override_settings
+from django.test import TestCase
 from django.test.client import Client
 from django.urls import reverse
 
