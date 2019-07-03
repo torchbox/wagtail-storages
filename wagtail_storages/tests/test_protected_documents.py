@@ -31,6 +31,15 @@ class AmazonS3DocumentTests(TestCase):
                 return False
         return True
 
+    def check_document_is_public(self, document):
+        # Loop over all the grants.
+        for grant in document.file.file.obj.Acl().grants:
+            # Find the all users grantee.
+            if 'URI' in grant['Grantee'] and grant['Grantee']['URI'] == 'http://acs.amazonaws.com/groups/global/AllUsers':
+                if grant['Permission'] == 'READ':
+                    return True
+        return False
+
     def setUp(self):
         # Create S3 bucket
         bucket_name = settings.AWS_STORAGE_BUCKET_NAME
@@ -62,8 +71,8 @@ class AmazonS3DocumentTests(TestCase):
         # Test wagtail redirects to S3.
         self.assertEquals(response.status_code, 302)
         self.assertTrue(response.url)
-        # Check the url given wasn't signed.
-        self.assertFalse(self.check_url_signed(response.url))
+        # Check object is public
+        self.assertTrue(self.check_document_is_public(document))
 
     def test_create_private_document(self):
         # Create document.
@@ -92,5 +101,5 @@ class AmazonS3DocumentTests(TestCase):
         # Test wagtail redirects to S3.
         self.assertEquals(response.status_code, 302)
         self.assertTrue(response.url)
-        # Check the url given was signed.
-        self.assertTrue(self.check_url_signed(response.url))
+        # Check object is not public
+        self.assertFalse(self.check_document_is_public(document))
