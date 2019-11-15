@@ -20,15 +20,12 @@ class AmazonS3DocumentTests(TestCase):
 
     def check_url_signed(self, url):
         parsed_url = urlparse(url)
-        query_args = [
+        # Make sure query parameters match signed URL's parameters
+        return all(query_arg in parsed_url.query for query_arg in {
             'AWSAccessKeyId',
             'Signature',
             'Expires',
-        ]
-        for query_arg in query_args:
-            if query_arg not in parsed_url.query:
-                return False
-        return True
+        })
 
     def check_document_is_public(self, document):
         all_users = 'http://acs.amazonaws.com/groups/global/AllUsers'
