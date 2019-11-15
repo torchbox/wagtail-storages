@@ -8,10 +8,9 @@ from django.urls import reverse
 from wagtail.core.models import Collection
 
 import boto3
-
 from moto import mock_s3
 
-from ..factories import CollectionViewRestrictionFactory, DocumentFactory
+from wagtail_storages.factories import CollectionViewRestrictionFactory, DocumentFactory
 
 
 @mock_s3
