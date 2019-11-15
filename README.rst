@@ -15,6 +15,9 @@ Features
 Requirements
 ------------
 
+- `WAGTAILDOCS_SERVE_METHOD
+  <https://docs.wagtail.io/en/v2.7/advanced_topics/settings.html#documents>`_
+  setting must be set to ``serve_view``.
 - You use ``django-storages`` with ``S3Boto3Storage`` as your storage backend
   and you have configured it.
 - Your S3 user can set files' ACLs in the bucket you use.
