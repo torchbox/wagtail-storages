@@ -17,56 +17,23 @@ isort:
   script:
     - tox -e isort
 
-py34-dj20-wagtail22:
-  image: python:3.4
-  stage: test
-  script:
-    - tox -e py35-dj20-wagtail22
-
-py35-dj20-wagtail22:
-  image: python:3.5
-  stage: test
-  script:
-    - tox -e py35-dj20-wagtail22
-
-py36-dj20-wagtail22:
-  image: python:3.6
-  stage: test
-  script:
-    - tox -e py36-dj20-wagtail22
-
-py37-dj20-wagtail22:
+# Wagtail 2.7
+py37-dj22-wagtail27:
   image: python:3.7
   stage: test
   script:
-    - tox -e py37-dj20-wagtail22
+    - tox -e py37-dj22-wagtail27
 
-py35-dj20-wagtal22:
-  image: python:3.5
-  stage: test
-  script:
-    - tox -e py35-dj20-wagtail22
-
-py36-dj20-wagtail22:
-  image: python:3.6
-  stage: test
-  script:
-    - tox -e py36-dj20-wagtail22
-
-py37-dj20-wagtail22:
+py38-dj22-wagtail27:
   image: python:3.7
   stage: test
   script:
-    - tox -e py37-dj20-wagtail22
+    - tox -e py37-dj22-wagtail27
 
-py37-dj20-wagtail21:
-  image: python:3.7
+
+# Wagtail master
+py38-dj22-wagtailmaster:
+  image: python:3.8
   stage: test
   script:
-    - tox -e py37-dj20-wagtail21
-
-py37-dj20-wagtail20:
-  image: python:3.7
-  stage: test
-  script:
-    - tox -e py37-dj20-wagtail20
+    - tox -e py37-dj22-wagtail27

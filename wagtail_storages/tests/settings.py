@@ -7,12 +7,20 @@ TESTS_PATH = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = django.utils.crypto.get_random_string(50)
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'wagtail.documents',
+    'wagtail.users',
+    'wagtail.core',
+
+    'wagtail_storages',
+
+    'storages',
+    'taggit',
 ]
 
 TEMPLATES = [
@@ -38,3 +46,12 @@ DATABASES = {
 }
 
 ROOT_URLCONF = 'wagtail_storages.tests.urls'
+
+AWS_DEFAULT_ACL = 'private'
+AWS_STORAGE_BUCKET_NAME = 'test'
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+MIDDLEWARE = [
+    'django.contrib.sessions.middleware.SessionMiddleware',
+]
