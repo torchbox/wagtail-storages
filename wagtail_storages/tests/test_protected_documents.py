@@ -6,15 +6,15 @@ from django.test.client import Client
 from django.urls import reverse
 
 import boto3
-from moto import mock_s3
 
+from moto import mock_s3
 from wagtail_storages.factories import CollectionViewRestrictionFactory, DocumentFactory
 
 
 @mock_s3
 class AmazonS3DocumentTests(TestCase):
     def check_s3_url(self, url):
-        return 's3.amazonaws.com' in url
+        return 's3.amazonaws.com' in url or 'media.torchbox.com' in url
 
     def check_url_signed(self, url):
         parsed_url = urlparse(url)

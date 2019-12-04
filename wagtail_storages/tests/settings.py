@@ -53,6 +53,8 @@ AWS_DEFAULT_ACL = 'private'
 # with the auth.
 AWS_QUERYSTRING_AUTH = False
 
+AWS_S3_CUSTOM_DOMAIN = "media.torchbox.com"
+
 AWS_STORAGE_BUCKET_NAME = 'test'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
