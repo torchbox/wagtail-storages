@@ -5,8 +5,6 @@ from django.test import TestCase
 from django.test.client import Client
 from django.urls import reverse
 
-from wagtail.core.models import Collection
-
 import boto3
 from moto import mock_s3
 
