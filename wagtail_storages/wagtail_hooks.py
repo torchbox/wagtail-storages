@@ -27,7 +27,8 @@ def serve_document_from_s3(document, request):
     # If document has restrictions, generate a signed URL, otherwise
     # return its public URL.
     if document.collection.get_view_restrictions():
-        backend = backends.S3Boto3StorageForWagtailDocument()
+        backend_class = backends.get_private_s3_boto3_document_storage_backend_class()
+        backend = backend_class()
         file_url = backend.url(document.file.name)
     else:
         file_url = document.file.url

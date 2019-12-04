@@ -46,11 +46,8 @@ class AmazonS3DocumentTests(TestCase):
         conn.create_bucket(Bucket=bucket_name)
 
         self.client = Client()
-        self.root_collection = Collection.get_first_root_node()
-        self.private_collection = self.root_collection.add_child(
-            name='Restricted collection',
-        )
-        self.private_collection_restriction = CollectionViewRestrictionFactory(collection=self.private_collection) # noqa
+        self.private_collection_restriction = CollectionViewRestrictionFactory()
+        self.private_collection = self.private_collection_restriction.collection
         self.view_restriction_session_key = self.private_collection_restriction.passed_view_restrictions_session_key # noqa
 
     def test_create_public_document(self):
@@ -74,11 +71,8 @@ class AmazonS3DocumentTests(TestCase):
         self.assertTrue(self.check_document_is_public(document))
 
     def test_create_private_document(self):
-        # Create document.
-        document = DocumentFactory()
-        # Add the document to the private collection.
-        document.collection = self.private_collection
-        document.save()
+        # Create document that is part of private collection.
+        document = DocumentFactory(collection=self.private_collection)
 
         # Check the document is on amazon's servers.
         self.assertTrue(self.check_s3_url(document.file.url))

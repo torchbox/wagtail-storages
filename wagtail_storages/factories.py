@@ -13,6 +13,7 @@ class DocumentFactory(factory.django.DjangoModelFactory):
         filename="testfile.txt",
         data=b'Test document',
     )
+    collection = factory.SubFactory('wagtail_storages.factories.CollectionFactory')
 
     class Meta:
         model = Document
@@ -24,6 +25,15 @@ class CollectionFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = Collection
+
+    @classmethod
+    def _create(cls, model_class, parent_collection=None, *args, **kwargs):
+        if parent_collection is None:
+            # Use root collection as a default.
+            parent_collection = Collection.get_first_root_node()
+        collection = model_class(*args, **kwargs)
+        parent_collection.add_child(instance=collection)
+        return collection
 
 
 class CollectionViewRestrictionFactory(factory.django.DjangoModelFactory):

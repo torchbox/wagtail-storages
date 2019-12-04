@@ -1,3 +1,4 @@
+import functools
 import logging
 
 from django.conf import settings
@@ -12,42 +13,69 @@ from wagtail_storages.utils import is_s3_boto3_storage_used
 Document = get_document_model()
 
 WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE = getattr(
-    settings,
-    'WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE',
-    {}
+    settings, "WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE", {}
 )
 
 logger = logging.getLogger(__name__)
 
 
+def skip_if_s3_storage_not_used(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        if not is_s3_boto3_storage_used():
+            return
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+def skip_if_frontend_cache_invalidator_not_configured(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        if not WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE:
+            return
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+@skip_if_s3_storage_not_used
 def update_document_s3_acls_when_collection_saved(sender, instance, **kwargs):
+
+    if not is_s3_boto3_storage_used():
+        return
     if instance.get_view_restrictions():
-        acl = 'private'
+        acl = "private"
     else:
-        acl = 'public-read'
+        acl = "public-read"
     documents = Document.objects.filter(collection=instance)
     for document in documents:
         logger.debug(
             'Collection "%s" saved, set ACL to "%s" on "%s"',
             instance.name,
             acl,
-            document.file.name
+            document.file.name,
         )
         document.file.file.obj.Acl().put(ACL=acl)
 
 
+@skip_if_s3_storage_not_used
 def update_document_s3_acls_when_document_saved(sender, instance, **kwargs):
+    if not is_s3_boto3_storage_used():
+        return
     if instance.collection.get_view_restrictions():
-        acl = 'private'
+        acl = "private"
     else:
-        acl = 'public-read'
+        acl = "public-read"
     instance.file.file.obj.Acl().put(ACL=acl)
-    logger.debug(
-        'Document saved, set ACL to "%s" on "%s"', acl, instance.file.name
-    )
+    logger.debug('Document saved, set ACL to "%s" on "%s"', acl, instance.file.name)
 
 
+@skip_if_s3_storage_not_used
+@skip_if_frontend_cache_invalidator_not_configured
 def purge_document_from_cache_when_saved(sender, instance, **kwargs):
+    if not is_s3_boto3_storage_used():
+        return
     logger.debug('Document "%s" saved, purge from cache', instance.file.name)
     batch = PurgeBatch()
     batch.add_url(instance.url)
@@ -55,18 +83,22 @@ def purge_document_from_cache_when_saved(sender, instance, **kwargs):
     batch.purge(backend_settings=WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE)
 
 
-def purge_documents_when_collection_saved_with_restrictions(sender, instance,
-                                                            **kwargs):
+@skip_if_s3_storage_not_used
+@skip_if_frontend_cache_invalidator_not_configured
+def purge_documents_when_collection_saved_with_restrictions(sender, instance, **kwargs):
+    if not is_s3_boto3_storage_used():
+        return
     if not instance.get_view_restrictions():
         logger.debug(
             'Collection "%s" saved, don\'t purge from cache because it has '
-            'no view restriction',
-            instance.name
+            "no view restriction",
+            instance.name,
         )
         return
     logger.debug(
         'Collection "%s" saved, has restrictions, purge its documents from '
-        'the cache', instance.name
+        "the cache",
+        instance.name,
     )
     batch = PurgeBatch()
     for document in Document.objects.filter(collection=instance):
@@ -76,22 +108,11 @@ def purge_documents_when_collection_saved_with_restrictions(sender, instance,
 
 
 def register_signal_handlers():
-    if is_s3_boto3_storage_used():
-        post_save.connect(
-            update_document_s3_acls_when_collection_saved, sender=Collection
-        )
-        post_save.connect(
-            update_document_s3_acls_when_document_saved, sender=Document
-        )
-        if WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE:
-            post_save.connect(
-                purge_document_from_cache_when_saved, sender=Document
-            )
-            post_save.connect(
-                purge_documents_when_collection_saved_with_restrictions,
-                sender=Collection
-            )
-            post_save.connect(
-                purge_documents_when_collection_saved_with_restrictions,
-                sender=Collection
-            )
+    # Updating S3 ACL.
+    post_save.connect(update_document_s3_acls_when_collection_saved, sender=Collection)
+    post_save.connect(update_document_s3_acls_when_document_saved, sender=Document)
+    # Front-end cache invalidation.
+    post_save.connect(purge_document_from_cache_when_saved, sender=Document)
+    post_save.connect(
+        purge_documents_when_collection_saved_with_restrictions, sender=Collection
+    )

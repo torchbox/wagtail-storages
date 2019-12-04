@@ -48,6 +48,11 @@ DATABASES = {
 ROOT_URLCONF = 'wagtail_storages.tests.urls'
 
 AWS_DEFAULT_ACL = 'private'
+
+# Disable querystring auth by default. Otherwise public files will be served
+# with the auth.
+AWS_QUERYSTRING_AUTH = False
+
 AWS_STORAGE_BUCKET_NAME = 'test'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
