@@ -1,7 +1,8 @@
 from django.core.files.storage import get_storage_class
-from django.test import TestCase, override_settings
+from django.test import TestCase
 
 from storages.backends.s3boto3 import S3Boto3Storage
+
 from wagtail_storages.backends import (
     get_private_s3_boto3_document_storage_backend_class,
 )

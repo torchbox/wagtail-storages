@@ -1,20 +1,18 @@
 import functools
 import logging
 
-from django.conf import settings
 from django.db.models.signals import post_save
 
 from wagtail.contrib.frontend_cache.utils import PurgeBatch
 from wagtail.core.models import Collection
 from wagtail.documents.models import get_document_model
 
-from wagtail_storages.utils import is_s3_boto3_storage_used
+from wagtail_storages.utils import (
+    get_frontend_cache_configuration,
+    is_s3_boto3_storage_used,
+)
 
 Document = get_document_model()
-
-WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE = getattr(
-    settings, "WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE", {}
-)
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +30,7 @@ def skip_if_s3_storage_not_used(func):
 def skip_if_frontend_cache_invalidator_not_configured(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        if not WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE:
+        if not get_frontend_cache_configuration():
             return
         return func(*args, **kwargs)
 
@@ -41,7 +39,6 @@ def skip_if_frontend_cache_invalidator_not_configured(func):
 
 @skip_if_s3_storage_not_used
 def update_document_s3_acls_when_collection_saved(sender, instance, **kwargs):
-
     if not is_s3_boto3_storage_used():
         return
     if instance.get_view_restrictions():
@@ -80,7 +77,7 @@ def purge_document_from_cache_when_saved(sender, instance, **kwargs):
     batch = PurgeBatch()
     batch.add_url(instance.url)
     batch.add_url(instance.file.url)
-    batch.purge(backend_settings=WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE)
+    batch.purge(backend_settings=get_frontend_cache_configuration())
 
 
 @skip_if_s3_storage_not_used
@@ -104,15 +101,31 @@ def purge_documents_when_collection_saved_with_restrictions(sender, instance, **
     for document in Document.objects.filter(collection=instance):
         batch.add_url(document.url)
         batch.add_url(document.file.url)
-    batch.purge(backend_settings=WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE)
+    batch.purge(backend_settings=get_frontend_cache_configuration())
 
 
 def register_signal_handlers():
     # Updating S3 ACL.
-    post_save.connect(update_document_s3_acls_when_collection_saved, sender=Collection)
-    post_save.connect(update_document_s3_acls_when_document_saved, sender=Document)
-    # Front-end cache invalidation.
-    post_save.connect(purge_document_from_cache_when_saved, sender=Document)
     post_save.connect(
-        purge_documents_when_collection_saved_with_restrictions, sender=Collection
+        update_document_s3_acls_when_collection_saved,
+        sender=Collection,
+        dispatch_uid="wagtail_storages_update_document_s3_acls_when_collection_saved",
+    )
+    post_save.connect(
+        update_document_s3_acls_when_document_saved,
+        sender=Document,
+        dispatch_uid="wagtail_storages_update_document_s3_acls_when_document_saved",
+    )
+    # Front-end cache invalidation.
+    post_save.connect(
+        purge_document_from_cache_when_saved,
+        sender=Document,
+        dispatch_uid="wagtail_storages_purge_document_from_cache_when_saved",
+    )
+    post_save.connect(
+        purge_documents_when_collection_saved_with_restrictions,
+        sender=Collection,
+        dispatch_uid=(
+            "wagtail_storages_purge_documents_when_collection_saved_with_restrictions",
+        ),
     )

@@ -1,9 +1,8 @@
+from urllib.parse import urlparse
+
 from django.test import RequestFactory, TestCase, override_settings
 
 from moto import mock_s3
-from wagtail_storages.backends import (
-    get_private_s3_boto3_document_storage_backend_class,
-)
 from wagtail_storages.factories import CollectionViewRestrictionFactory, DocumentFactory
 from wagtail_storages.wagtail_hooks import serve_document_from_s3
 
@@ -39,8 +38,7 @@ class TestWagtailHooks(TestCase):
         request = RequestFactory().get(path=document.url)
         response = serve_document_from_s3(document, request)
         self.assertEqual(response.status_code, 302)
-        backend = get_private_s3_boto3_document_storage_backend_class()()
-        self.assertEqual(response.url, backend.url(document.file.name))
+        self.assertIn("amazonaws.com", urlparse(response.url).hostname)
 
     def test_redirect_response_is_never_cached(self):
         document = DocumentFactory()
