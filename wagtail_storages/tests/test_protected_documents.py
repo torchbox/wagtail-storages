@@ -8,7 +8,9 @@ from django.urls import reverse
 import boto3
 
 from moto import mock_s3
+
 from wagtail_storages.factories import CollectionViewRestrictionFactory, DocumentFactory
+from wagtail_storages.tests.utils import is_s3_object_is_public
 
 
 @mock_s3
@@ -26,16 +28,7 @@ class AmazonS3DocumentTests(TestCase):
         })
 
     def check_document_is_public(self, document):
-        all_users = 'http://acs.amazonaws.com/groups/global/AllUsers'
-        # Loop over all the grants.
-        for grant in document.file.file.obj.Acl().grants:
-            # Find the all users grantee.
-            if 'URI' not in grant['Grantee']:
-                continue
-            if grant['Grantee']['URI'] == all_users:
-                if grant['Permission'] == 'READ':
-                    return True
-        return False
+        return is_s3_object_is_public(document.file.file.obj)
 
     def setUp(self):
         # Create S3 bucket
