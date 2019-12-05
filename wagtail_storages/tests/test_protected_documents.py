@@ -22,7 +22,7 @@ class AmazonS3DocumentTests(TestCase):
         # Make sure query parameters match signed URL's parameters
         return all(
             query_arg in parsed_url.query
-            for query_arg in {"AWSAccessKeyId", "Signature", "Expires",}
+            for query_arg in {"AWSAccessKeyId", "Signature", "Expires"}
         )
 
     def check_document_is_public(self, document):

@@ -59,27 +59,6 @@ class TestUpdateDocumentAclsWhenCollectionSaved(TestCase):
 
 
 @mock_s3
-class TestUpdateDocumentAclsWhenCollectionSaved(TestCase):
-    @factory.django.mute_signals(post_save)
-    def test_s3_object_acl_set_to_public(self):
-        document = DocumentFactory()
-        collection = document.collection
-        update_document_s3_acls_when_collection_saved(
-            sender=collection._meta.model, instance=collection
-        )
-        self.assertTrue(is_s3_object_is_public(document.file.file.obj))
-
-    @factory.django.mute_signals(post_save)
-    def test_s3_object_acl_set_to_private(self):
-        private_collection = CollectionViewRestrictionFactory().collection
-        document = DocumentFactory(collection=private_collection)
-        update_document_s3_acls_when_collection_saved(
-            sender=private_collection._meta.model, instance=private_collection
-        )
-        self.assertFalse(is_s3_object_is_public(document.file.file.obj))
-
-
-@mock_s3
 class TestUpdateDocumentAclsWhenDocumentSaved(TestCase):
     @factory.django.mute_signals(post_save)
     def test_s3_object_acl_set_to_public(self):
@@ -118,7 +97,7 @@ class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(TestCase):
     @factory.django.mute_signals(post_save)
     def test_cache_purged_for_private_collection(self):
         private_collection = CollectionViewRestrictionFactory().collection
-        documents = DocumentFactory(collection=private_collection)
+        DocumentFactory(collection=private_collection)
         with mock.patch(
             "wagtail.contrib.frontend_cache.backends.urlopen"
         ) as urlopen_mock:
@@ -144,7 +123,7 @@ class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(TestCase):
     @factory.django.mute_signals(post_save)
     def test_cache_not_purged_for_public_collection(self):
         collection = CollectionFactory()
-        document = DocumentFactory.create_batch(10, collection=collection)
+        DocumentFactory.create_batch(10, collection=collection)
         with mock.patch(
             "wagtail.contrib.frontend_cache.backends.urlopen"
         ) as urlopen_mock:
