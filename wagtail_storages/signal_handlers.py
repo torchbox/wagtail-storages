@@ -29,8 +29,6 @@ def skip_if_s3_storage_not_used(func):
 
 @skip_if_s3_storage_not_used
 def update_document_s3_acls_when_collection_saved(sender, instance, **kwargs):
-    if not is_s3_boto3_storage_used():
-        return
     if instance.get_view_restrictions():
         acl = "private"
     else:
@@ -48,8 +46,6 @@ def update_document_s3_acls_when_collection_saved(sender, instance, **kwargs):
 
 @skip_if_s3_storage_not_used
 def update_document_s3_acls_when_document_saved(sender, instance, **kwargs):
-    if not is_s3_boto3_storage_used():
-        return
     if instance.collection.get_view_restrictions():
         acl = "private"
     else:
@@ -60,8 +56,6 @@ def update_document_s3_acls_when_document_saved(sender, instance, **kwargs):
 
 @skip_if_s3_storage_not_used
 def purge_document_from_cache_when_saved(sender, instance, **kwargs):
-    if not is_s3_boto3_storage_used():
-        return
     # No need for check if they are public or private - if they've changed,
     # they should be out of cache.
     logger.debug('Document "%s" saved, purge from cache', instance.file.name)
@@ -78,8 +72,6 @@ def purge_document_from_cache_when_saved(sender, instance, **kwargs):
 
 @skip_if_s3_storage_not_used
 def purge_documents_when_collection_saved_with_restrictions(sender, instance, **kwargs):
-    if not is_s3_boto3_storage_used():
-        return
     # Do not purge documents if they are in a public collection.
     if not instance.get_view_restrictions():
         logger.debug(
