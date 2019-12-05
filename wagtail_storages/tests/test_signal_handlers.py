@@ -10,7 +10,7 @@ from moto import mock_s3
 from wagtail_storages.factories import CollectionFactory, CollectionViewRestrictionFactory, DocumentFactory
 from wagtail_storages.signal_handlers import (
     purge_documents_when_collection_saved_with_restrictions,
-    skip_if_frontend_cache_invalidator_not_configured,
+    purge_document_from_cache_when_saved,
     skip_if_s3_storage_not_used,
     update_document_s3_acls_when_collection_saved,
     update_document_s3_acls_when_document_saved,
@@ -30,25 +30,6 @@ class TestDecorators(TestCase):
     def test_skipping_s3_storage_decorator_with_s3_storage(self):
         mock = MagicMock()
         skip_if_s3_storage_not_used(mock)()
-        mock.assert_called_once()
-
-    @override_settings(WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE={})
-    def test_skipping_frontend_purging_without_configuration(self):
-        mock = MagicMock()
-        skip_if_frontend_cache_invalidator_not_configured(mock)()
-        mock.assert_not_called()
-
-    @override_settings(
-        WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE={
-            "varnish": {
-                "BACKEND": "wagtail.contrib.frontend_cache.backends.HTTPBackend",
-                "LOCATION": "http://localhost:8000",
-            },
-        }
-    )
-    def test_purge_handlers_called_when_frontend_cache_configured(self):
-        mock = MagicMock()
-        skip_if_frontend_cache_invalidator_not_configured(mock)()
         mock.assert_called_once()
 
 
@@ -117,6 +98,12 @@ class TestUpdateDocumentAclsWhenDocumentSaved(TestCase):
 @mock_s3
 class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(TestCase):
     @override_settings(
+        WAGTAILFRONTENDCACHE={
+            "varnish": {
+                "BACKEND": "wagtail.contrib.frontend_cache.backends.HTTPBackend",
+                "LOCATION": "http://localhost:8000",
+            },
+        },
         WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE={
             "varnish": {
                 "BACKEND": "wagtail.contrib.frontend_cache.backends.HTTPBackend",
@@ -127,7 +114,7 @@ class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(TestCase):
     @factory.django.mute_signals(post_save)
     def test_cache_purged_for_private_collection(self):
         private_collection = CollectionViewRestrictionFactory().collection
-        document = DocumentFactory.create_batch(10, collection=private_collection)
+        documents = DocumentFactory(collection=private_collection)
         with mock.patch(
             "wagtail.contrib.frontend_cache.backends.urlopen"
         ) as urlopen_mock:
@@ -137,6 +124,12 @@ class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(TestCase):
         urlopen_mock.assert_called()
 
     @override_settings(
+        WAGTAILFRONTENDCACHE={
+            "varnish": {
+                "BACKEND": "wagtail.contrib.frontend_cache.backends.HTTPBackend",
+                "LOCATION": "http://localhost:8000",
+            },
+        },
         WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE={
             "varnish": {
                 "BACKEND": "wagtail.contrib.frontend_cache.backends.HTTPBackend",
@@ -155,3 +148,31 @@ class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(TestCase):
                 sender=collection._meta.model, instance=collection
             )
         urlopen_mock.assert_not_called()
+
+
+@mock_s3
+class TestPurgeDocumentFromCacheWhenSaved(TestCase):
+    @override_settings(
+        WAGTAILFRONTENDCACHE={
+            "varnish": {
+                "BACKEND": "wagtail.contrib.frontend_cache.backends.HTTPBackend",
+                "LOCATION": "http://localhost:8000",
+            },
+        },
+        WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE={
+            "varnish": {
+                "BACKEND": "wagtail.contrib.frontend_cache.backends.HTTPBackend",
+                "LOCATION": "http://localhost:8000",
+            },
+        }
+    )
+    @factory.django.mute_signals(post_save)
+    def test_create_new_document_purges_cache_for_that_url(self):
+        document = DocumentFactory()
+        with mock.patch(
+            "wagtail.contrib.frontend_cache.backends.urlopen"
+        ) as urlopen_mock:
+            purge_document_from_cache_when_saved(
+                sender=document._meta.model, instance=document
+            )
+        urlopen_mock.assert_called()
