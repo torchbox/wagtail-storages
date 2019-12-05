@@ -1,1 +1,1 @@
-default_app_config = 'wagtail_storages.apps.WagtailStoragesConfig'
+default_app_config = "wagtail_storages.apps.WagtailStoragesConfig"

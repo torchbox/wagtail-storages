@@ -3,8 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class WagtailStoragesConfig(apps.AppConfig):
-    name = 'wagtail_storages'
-    verbose_name = _('Wagtail storages')
+    name = "wagtail_storages"
+    verbose_name = _("Wagtail storages")
 
     def ready(self):
         from wagtail_storages import signal_handlers

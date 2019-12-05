@@ -7,10 +7,14 @@ from django.test import TestCase, override_settings
 import factory
 from moto import mock_s3
 
-from wagtail_storages.factories import CollectionFactory, CollectionViewRestrictionFactory, DocumentFactory
+from wagtail_storages.factories import (
+    CollectionFactory,
+    CollectionViewRestrictionFactory,
+    DocumentFactory,
+)
 from wagtail_storages.signal_handlers import (
-    purge_documents_when_collection_saved_with_restrictions,
     purge_document_from_cache_when_saved,
+    purge_documents_when_collection_saved_with_restrictions,
     skip_if_s3_storage_not_used,
     update_document_s3_acls_when_collection_saved,
     update_document_s3_acls_when_document_saved,
@@ -109,7 +113,7 @@ class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(TestCase):
                 "BACKEND": "wagtail.contrib.frontend_cache.backends.HTTPBackend",
                 "LOCATION": "http://localhost:8000",
             },
-        }
+        },
     )
     @factory.django.mute_signals(post_save)
     def test_cache_purged_for_private_collection(self):
@@ -135,7 +139,7 @@ class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(TestCase):
                 "BACKEND": "wagtail.contrib.frontend_cache.backends.HTTPBackend",
                 "LOCATION": "http://localhost:8000",
             },
-        }
+        },
     )
     @factory.django.mute_signals(post_save)
     def test_cache_not_purged_for_public_collection(self):
@@ -164,7 +168,7 @@ class TestPurgeDocumentFromCacheWhenSaved(TestCase):
                 "BACKEND": "wagtail.contrib.frontend_cache.backends.HTTPBackend",
                 "LOCATION": "http://localhost:8000",
             },
-        }
+        },
     )
     @factory.django.mute_signals(post_save)
     def test_create_new_document_purges_cache_for_that_url(self):

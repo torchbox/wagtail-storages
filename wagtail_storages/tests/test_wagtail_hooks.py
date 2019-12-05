@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 from django.test import RequestFactory, TestCase, override_settings
 
 from moto import mock_s3
+
 from wagtail_storages.factories import CollectionViewRestrictionFactory, DocumentFactory
 from wagtail_storages.wagtail_hooks import serve_document_from_s3
 

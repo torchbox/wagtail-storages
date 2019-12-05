@@ -13,6 +13,8 @@ matrix:
       python: 3.8
     - env: TOXENV=isort
       python: 3.8
+    - env: TOXENV=black
+      python: 3.8
   allow_failures:
     - env: TOXENV=py38-dj30-wagtailmaster
 
