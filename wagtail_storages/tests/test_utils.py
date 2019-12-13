@@ -1,6 +1,9 @@
 from django.test import TestCase, override_settings
 
-from wagtail_storages.factories import CollectionFactory, CollectionViewRestrictionFactory
+from wagtail_storages.factories import (
+    CollectionFactory,
+    CollectionViewRestrictionFactory,
+)
 from wagtail_storages.utils import (
     get_acl_for_collection,
     get_frontend_cache_configuration,
