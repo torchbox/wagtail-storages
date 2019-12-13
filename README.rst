@@ -22,6 +22,8 @@ Requirements
   you need to configure that beforehand.
 - You don't cache your Wagtail's documents view, since that would make it
   impossible to have private files.
+- ``AWS_QUERYSTRING_AUTH = False`` is set if you want to serve public files
+  without querystring auth.
 
 Rationale
 ---------
