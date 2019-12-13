@@ -11,25 +11,25 @@ logger = logging.getLogger(__name__)
 
 
 def update_document_acl(document):
-    if document.collection.get_view_restrictions():
-        acl = "private"
-    else:
-        acl = "public-read"
+    acl = get_acl_for_collection(document.collection)
     document.file.file.obj.Acl().put(ACL=acl)
     logger.debug('Set document ACL to "%s" on "%s"', acl, document.file.name)
 
 
 def update_collection_document_acls(collection):
-    if collection.get_view_restrictions():
-        acl = "private"
-    else:
-        acl = "public-read"
+    acl = get_acl_for_collection(collection)
     documents = get_document_model().objects.filter(collection=collection)
     for document in documents:
         logger.debug(
             'Set document ACL to "%s" on "%s"', acl, document.file.name,
         )
         document.file.file.obj.Acl().put(ACL=acl)
+
+
+def get_acl_for_collection(collection):
+    if collection.get_view_restrictions():
+        return "private"
+    return "public-read"
 
 
 def is_s3_boto3_storage_used():
