@@ -1,6 +1,11 @@
 from django.test import TestCase, override_settings
 
+from wagtail_storages.factories import (
+    CollectionFactory,
+    CollectionViewRestrictionFactory,
+)
 from wagtail_storages.utils import (
+    get_acl_for_collection,
     get_frontend_cache_configuration,
     is_s3_boto3_storage_used,
 )
@@ -39,3 +44,13 @@ class TestIsS3Boto3StorageUsed(TestCase):
                 },
             },
         )
+
+
+class TestGetAclForCollection(TestCase):
+    def test_public_colleciton(self):
+        collection = CollectionFactory()
+        self.assertEqual(get_acl_for_collection(collection), "public-read")
+
+    def test_private_colleciton(self):
+        collection = CollectionViewRestrictionFactory().collection
+        self.assertEqual(get_acl_for_collection(collection), "private")

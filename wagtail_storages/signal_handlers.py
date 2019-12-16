@@ -10,6 +10,8 @@ from wagtail.documents.models import get_document_model
 from wagtail_storages.utils import (
     get_frontend_cache_configuration,
     is_s3_boto3_storage_used,
+    update_document_acl,
+    update_collection_document_acls,
 )
 
 Document = get_document_model()
@@ -28,30 +30,13 @@ def skip_if_s3_storage_not_used(func):
 
 
 @skip_if_s3_storage_not_used
-def update_document_s3_acls_when_collection_saved(sender, instance, **kwargs):
-    if instance.get_view_restrictions():
-        acl = "private"
-    else:
-        acl = "public-read"
-    documents = Document.objects.filter(collection=instance)
-    for document in documents:
-        logger.debug(
-            'Collection "%s" saved, set ACL to "%s" on "%s"',
-            instance.name,
-            acl,
-            document.file.name,
-        )
-        document.file.file.obj.Acl().put(ACL=acl)
+def update_document_acls_when_collection_saved(sender, instance, **kwargs):
+    update_collection_document_acls(instance)
 
 
 @skip_if_s3_storage_not_used
-def update_document_s3_acls_when_document_saved(sender, instance, **kwargs):
-    if instance.collection.get_view_restrictions():
-        acl = "private"
-    else:
-        acl = "public-read"
-    instance.file.file.obj.Acl().put(ACL=acl)
-    logger.debug('Document saved, set ACL to "%s" on "%s"', acl, instance.file.name)
+def update_document_acls_when_document_saved(sender, instance, **kwargs):
+    update_document_acl(instance)
 
 
 @skip_if_s3_storage_not_used
@@ -99,12 +84,12 @@ def purge_documents_when_collection_saved_with_restrictions(sender, instance, **
 def register_signal_handlers():
     # Updating S3 ACL.
     post_save.connect(
-        update_document_s3_acls_when_collection_saved,
+        update_document_acls_when_collection_saved,
         sender=Collection,
         dispatch_uid="wagtail_storages_update_document_s3_acls_when_collection_saved",
     )
     post_save.connect(
-        update_document_s3_acls_when_document_saved,
+        update_document_acls_when_document_saved,
         sender=Document,
         dispatch_uid="wagtail_storages_update_document_s3_acls_when_document_saved",
     )
