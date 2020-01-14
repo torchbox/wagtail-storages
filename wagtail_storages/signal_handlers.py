@@ -10,8 +10,8 @@ from wagtail.documents.models import get_document_model
 from wagtail_storages.utils import (
     get_frontend_cache_configuration,
     is_s3_boto3_storage_used,
-    update_document_acl,
     update_collection_document_acls,
+    update_document_acl,
 )
 
 Document = get_document_model()
