@@ -13,6 +13,7 @@ from wagtail_storages.factories import (
     DocumentFactory,
 )
 from wagtail_storages.signal_handlers import (
+    purge_document_from_cache_when_deleted,
     purge_document_from_cache_when_saved,
     purge_documents_when_collection_saved_with_restrictions,
     skip_if_s3_storage_not_used,
@@ -156,6 +157,31 @@ class TestPurgeDocumentFromCacheWhenSaved(TestCase):
             "wagtail.contrib.frontend_cache.backends.urlopen"
         ) as urlopen_mock:
             purge_document_from_cache_when_saved(
+                sender=document._meta.model, instance=document
+            )
+        urlopen_mock.assert_called()
+
+    @override_settings(
+        WAGTAILFRONTENDCACHE={
+            "varnish": {
+                "BACKEND": "wagtail.contrib.frontend_cache.backends.HTTPBackend",
+                "LOCATION": "http://localhost:8000",
+            },
+        },
+        WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE={
+            "varnish": {
+                "BACKEND": "wagtail.contrib.frontend_cache.backends.HTTPBackend",
+                "LOCATION": "http://localhost:8000",
+            },
+        },
+    )
+    @factory.django.mute_signals(post_save)
+    def test_delete_document_purges_cache_for_that_url(self):
+        document = DocumentFactory()
+        with mock.patch(
+            "wagtail.contrib.frontend_cache.backends.urlopen"
+        ) as urlopen_mock:
+            purge_document_from_cache_when_deleted(
                 sender=document._meta.model, instance=document
             )
         urlopen_mock.assert_called()

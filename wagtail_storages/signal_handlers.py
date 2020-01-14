@@ -1,15 +1,15 @@
 import functools
 import logging
 
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete
 
-from wagtail.contrib.frontend_cache.utils import PurgeBatch
 from wagtail.core.models import Collection
 from wagtail.documents.models import get_document_model
 
 from wagtail_storages.utils import (
-    get_frontend_cache_configuration,
     is_s3_boto3_storage_used,
+    purge_collection_documents_from_cache,
+    purge_document_from_cache,
     update_collection_document_acls,
     update_document_acl,
 )
@@ -41,44 +41,17 @@ def update_document_acls_when_document_saved(sender, instance, **kwargs):
 
 @skip_if_s3_storage_not_used
 def purge_document_from_cache_when_saved(sender, instance, **kwargs):
-    # No need for check if they are public or private - if they've changed,
-    # they should be out of cache.
-    logger.debug('Document "%s" saved, purge from cache', instance.file.name)
-    if get_frontend_cache_configuration():
-        s3_batch = PurgeBatch()
-        s3_batch.add_url(instance.file.url)
-        s3_batch.purge(backend_settings=get_frontend_cache_configuration())
+    purge_document_from_cache(instance)
 
-    # Purge Wagtail document view URL using normal site's cache.
-    wagtail_batch = PurgeBatch()
-    wagtail_batch.add_url(instance.url)
-    wagtail_batch.purge()
+
+@skip_if_s3_storage_not_used
+def purge_document_from_cache_when_deleted(sender, instance, **kwargs):
+    purge_document_from_cache(instance)
 
 
 @skip_if_s3_storage_not_used
 def purge_documents_when_collection_saved_with_restrictions(sender, instance, **kwargs):
-    # Do not purge documents if they are in a public collection.
-    if not instance.get_view_restrictions():
-        logger.debug(
-            'Collection "%s" saved, don\'t purge from cache because it has '
-            "no view restriction",
-            instance.name,
-        )
-        return
-    logger.debug(
-        'Collection "%s" saved, has restrictions, purge its documents from '
-        "the cache",
-        instance.name,
-    )
-    # Purge download URLs and actual files if they possibly used to be public.
-    wagtail_batch = PurgeBatch()
-    s3_batch = PurgeBatch()
-    for document in Document.objects.filter(collection=instance):
-        wagtail_batch.add_url(document.url)
-        s3_batch.add_url(document.file.url)
-    wagtail_batch.purge()
-    if get_frontend_cache_configuration():
-        s3_batch.purge(backend_settings=get_frontend_cache_configuration())
+    purge_collection_documents_from_cache(instance)
 
 
 def register_signal_handlers():
@@ -98,6 +71,11 @@ def register_signal_handlers():
         purge_document_from_cache_when_saved,
         sender=Document,
         dispatch_uid="wagtail_storages_purge_document_from_cache_when_saved",
+    )
+    pre_delete.connect(
+        purge_document_from_cache_when_deleted,
+        sender=Document,
+        dispatch_uid="wagtail_storages_purge_document_from_cache_when_deleted",
     )
     post_save.connect(
         purge_documents_when_collection_saved_with_restrictions,
