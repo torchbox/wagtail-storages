@@ -1,6 +1,7 @@
 venv/
 build/
 dist/
+wagtail_storages/tests/media/
 .tox/
 *.pyc
 *.egg-info

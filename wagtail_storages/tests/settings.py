@@ -38,6 +38,11 @@ TEMPLATES = [
 
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": "db.sqlite3"}}
 
+# Some tests use the default the FileSystemStorage backend.
+MEDIA_ROOT = os.path.join(TESTS_PATH, 'media')
+
+STATIC_ROOT = os.path.join(TESTS_PATH, 'static')
+
 ROOT_URLCONF = "wagtail_storages.tests.urls"
 
 AWS_DEFAULT_ACL = "private"
@@ -45,6 +50,9 @@ AWS_DEFAULT_ACL = "private"
 # Disable querystring auth by default. Otherwise public files will be served
 # with the auth.
 AWS_QUERYSTRING_AUTH = False
+
+# Do not override file names
+AWS_S3_FILE_OVERWRITE = False
 
 AWS_S3_CUSTOM_DOMAIN = "media.torchbox.com"
 
