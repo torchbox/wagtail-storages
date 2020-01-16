@@ -39,9 +39,9 @@ TEMPLATES = [
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": "db.sqlite3"}}
 
 # Some tests use the default the FileSystemStorage backend.
-MEDIA_ROOT = os.path.join(TESTS_PATH, 'media')
+MEDIA_ROOT = os.path.join(TESTS_PATH, "media")
 
-STATIC_ROOT = os.path.join(TESTS_PATH, 'static')
+STATIC_ROOT = os.path.join(TESTS_PATH, "static")
 
 ROOT_URLCONF = "wagtail_storages.tests.urls"
 
