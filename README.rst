@@ -1,39 +1,50 @@
 wagtail-storages
 ================
 
-This package makes usage of AWS S3 with private documents in Wagtail as good
-as it can get. This package is for you if you want:
+This package fills the missing gap in using AWS S3 together with Wagtail. This
+package will be useful if you want to:
 
 - Use AWS S3 bucket for hosting Wagtail documents.
-- Put the bucket behind the CDN - why call the bucket directly each time?
-- Allow editors to make use of privacy controls on documents, but keep using
+- Put the bucket behind the CDN so that the bucket is not called directly each
+  time.
+- Allow editors to use privacy controls on documents, whilst using CDN
   CDN.
-- Getting timeouts because of downloads being proxied through Wagtail views -
-  cannot use redirect view if you want documents to be truly private.
+- Avoid time-outs because of downloads being proxied through Wagtail views.
+
+  *Note: you cannot use the document* `redirect view`__ *if you want your documents to be truly private.*
+
+.. _WagtailRedirectView: https://docs.wagtail.io/en/stable/advanced_topics/settings.html#wagtaildocs-serve-method
+__ WagtailRedirectView_
+
 
 What does it do?
 ----------------
 
-The package is a collection of signal handlers and wagtail hooks.
+The package is a collection of signal handlers and Wagtail hooks.
 
-- It sets per-object ACLs on S3 whenever there is a change of privacy
-  settings of a document on Wagtail.
-- Replaces the current document view with a redirect to either a bucket signed
-  URL for private documents or public custom domain URL for public ones.
+- Sets per-object ACLs on S3 whenever privacy settings change on a Wagtail
+  document.
+- Replaces the current document view with a redirect. Either to a signed S3
+  bucket URL for private documents or public custom domain URL for public ones.
 - Purges CDN for documents that have changed.
 
 Requirements
 ------------
 
-- Using ``django-storages`` with the ``S3Boto3Storage`` storage backend.
-- Using supported CDN by Wagtail front-end cache invalidator.
+- ``django-storages`` with the ``S3Boto3Storage`` storage backend configured in
+  a Wagtail project.
+- CDN supported by Wagtail front-end cache invalidator.
 
-Management command ``django-admin fix_document_acls``
------------------------------------------------------
+Management commands
+-------------------
 
-There's a management command that sets all the documents' ACLs according to the
-their collection permissions. This may be useful if you started using
-wagtail-storages after you uploaded documents.
+``django-admin fix_document_acls``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The package provider a management command that sets all the documents' ACLs
+according to the their collection permissions. This must be called if there had
+been documents in a bucket before the package was used to make sure the ACLs in
+the bucket are correct.
 
 Settings
 --------
@@ -72,32 +83,32 @@ response, e.g.
 Recommended S3 setup with Wagtail
 ---------------------------------
 
-This is a guide that explains the recommended setup for using S3 with Wagtail.
+The following guide explains the recommended setup for using S3 with Wagtail.
 This guide assumes that:
 
-* You serve your main website at ``llamasavers.com``.
+* You serve your main website at ``llamasavers.com`` (replace
+  ``llamasavers.com`` with your actual domain name).
 * Your S3 bucket is called ``media.llamasavers.com`` and you host it from that
   domain name.
-* Using CDN on that domain, this guide will assume Cloudflare.
+* You are using CDN on that domain, this guide will assume Cloudflare.
 
 Set up S3 bucket
 ~~~~~~~~~~~~~~~~
 
-First step is to set up your S3 bucket. It must be configured to:
+First, set up your S3 bucket. It must be configured to:
 
-* Bucket name must match the domain name, e.g. ``media.llamasavers.com``, that
-  you intend using it with.
-* Allow user to perform the following actions on the bucket:
+* Have a name that matches the domain name, e.g. ``media.llamasavers.com``.
+* Allow the user to perform the following actions on the bucket:
   * ``s3:ListBucket``
   * ``s3:GetBucketLocation``
   * ``s3:ListBucketMultipartUploads``
   * ``s3:ListBucketVersions``
-* Allow user to perform all the actions (``s3:*``) on the objects within the
+* Allow the user to perform all the actions (``s3:*``) on the objects within the
   bucket.
 * Allow the internet traffic to access Wagtail image renditions (``images/*``).
 
 The user permissions can be set in the IAM or via a bucket policy. See example
-of all of those points being achieved with a bucket policy below.
+of all of those points being achieved in the bucket policy below.
 
 .. code:: json
 
@@ -138,19 +149,20 @@ of all of those points being achieved with a bucket policy below.
     }
 
 
-After the bucket is set up, the bucket can be configured in a Wagtail project.
+After the S3 bucket is set up on AWS, you can configure the Wagtail project to
+use it.
 
 Set up django-storages
 ~~~~~~~~~~~~~~~~~~~~~~
 
-You need to install ``django-storages`` and ``boto3``.
+Install ``django-storages`` and ``boto3``.
 
 .. code:: sh
 
    pip install django-storages[boto3]
 
-Set up your S3 bucket with ``django-storages``. The following code will allow
-configuration with environment variables.
+Set up your S3 bucket with ``django-storages``. The following code allows
+configuration via environment variables.
 
 .. code:: python
 
@@ -173,7 +185,7 @@ configuration with environment variables.
 
         # Do not allow overriding files on S3 as per Wagtail docs recommendation:
         # https://docs.wagtail.io/en/stable/advanced_topics/deploying.html#cloud-storage
-        # Not having this setting may have consequences in losing files.
+        # Not having this setting may have consequences such as losing files.
         AWS_S3_FILE_OVERWRITE = False
 
         # Default ACL for new files should be "private" - not accessible to the
@@ -181,15 +193,15 @@ configuration with environment variables.
         # where the documents should use wagtail-storages.
         AWS_DEFAULT_ACL = "private"
 
-        # We generally use this setting in the production to put the S3 bucket
+        # We generally use this setting in production to put the S3 bucket
         # behind a CDN using a custom domain, e.g. media.llamasavers.com.
         # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#cloudfront
         if "AWS_S3_CUSTOM_DOMAIN" in os.environ:
             AWS_S3_CUSTOM_DOMAIN = os.environ["AWS_S3_CUSTOM_DOMAIN"]
 
-        # When signing URLs is facilitated, the region must be set, because the
-        # global S3 endpoint does not seem to support that. Set this only if
-        # necessary.
+        # When signing URLs is enabled, the region must be set.
+        # The global S3 endpoint does not seem to support signed URLS.
+        # Set this only if you will be using signed URLs.
         if "AWS_S3_REGION_NAME" in os.environ:
             AWS_S3_REGION_NAME = os.environ["AWS_S3_REGION_NAME"]
 
@@ -198,15 +210,16 @@ configuration with environment variables.
         # https://github.com/jschneier/django-storages/blob/10d1929de5e0318dbd63d715db4bebc9a42257b5/storages/backends/s3boto3.py#L217
         AWS_S3_URL_PROTOCOL = os.environ.get("AWS_S3_URL_PROTOCOL", "https:")
 
-You can set the following environment variables to configure your bucket if you
-used the above snippet.
+
+If you use the above snippet, you can set the following environment variables:
 
 * ``AWS_STORAGE_BUCKET_NAME`` - set to ``media.llamasavers.com``.
 * ``AWS_S3_CUSTOM_DOMAIN`` - set to ``media.llamasavers.com``.
 * ``AWS_S3_REGION_NAME`` - set to your AWS region name, e.g. ``eu-west-2``.
 
-You can use one of the methods to provide `boto3 with credentials`__. E.g. to
-use environment variables, you need to set the following variables:
+You can use one of the methods to provide `boto3 with credentials`__. We
+suggest you stick with the environment variables. To do that, you need to set
+the following variables:
 
 * ``AWS_ACCESS_KEY_ID``
 * ``AWS_SECRET_ACCESS_KEY``
@@ -215,7 +228,7 @@ use environment variables, you need to set the following variables:
 
 __ Boto3Credentials_
 
-Now the storage should be configured and working, e.g. editors should be able to
+Now the storage should be configured and working. Editors should be able to
 upload images and documents in Wagtail admin.
 
 Set up ``wagtail-storages``
@@ -240,16 +253,19 @@ Add ``wagtail_storages`` to your ``INSTALLED_APPS`` in your settings file.
        # ... Other apps
    ]
 
-With having that set up that, ACLs should be updated if documents are moved to
+With that, ACLs should be updated if documents are moved to
 private collections.
+
+If you already have files in your S3 bucket, run ``django-admin
+fix_document_acls`` to make sure all documents have the right ACLs set up.
 
 Set up front-end cache invalidation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If edge cache is set up on the custom domain, ``media.llamasavers.com``, the CDN
-purge should be set up to avoid having outdated or private documents available
-to users via the CDN endpoint. For example, for Cloudflare you want to use a
-configuration similar to the one below:
+If edge cache is set up on the custom domain (``media.llamasavers.com``) you
+should set up the CDN purging to avoid having outdated or private documents
+available to users via the CDN endpoint. For example, for Cloudflare you want
+to use a configuration similar to the one below:
 
 .. code:: python
 
@@ -267,19 +283,22 @@ configuration similar to the one below:
             },
         }
 
-Then setup the following environment variables:
+Then set the following environment variables:
 
 * ``S3_CACHE_CLOUDFLARE_EMAIL``
 * ``S3_CACHE_CLOUDFLARE_TOKEN``
 * ``S3_CACHE_CLOUDFLARE_ZONEID``
 
-By having this set up, the documents will be purged from cache when they are
+Once set up, the documents will be purged from cache when they are
 modified or their privacy settings have changed.
 
-The setting follows configuration format of Wagtail's module -
-``wagtail.contrib.frontend_cache``. See the details `here`__. The only
-difference is the setting name.
+The setting follows configuration format of the front-end cache invalidator
+configuration in Wagtail. See the details `here`__. The only difference is
+the setting name, which for wagtail-storages is
+``WAGTAIL_STORAGES_DOCUMENTS_FRONTENDCACHE``.
 
 .. _WagtailFrontEndCache: https://docs.wagtail.io/en/stable/reference/contrib/frontendcache.html
 
 __ WagtailFrontEndCache_
+
+All done!
