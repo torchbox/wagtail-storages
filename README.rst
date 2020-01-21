@@ -97,15 +97,15 @@ Set up S3 bucket
 
 First, set up your S3 bucket. It must be configured to:
 
-* Have a name that matches the domain name, e.g. ``media.llamasavers.com``.
-* Allow the user to perform the following actions on the bucket:
-  * ``s3:ListBucket``
-  * ``s3:GetBucketLocation``
-  * ``s3:ListBucketMultipartUploads``
-  * ``s3:ListBucketVersions``
-* Allow the user to perform all the actions (``s3:*``) on the objects within the
+- Have a name that matches the domain name, e.g. ``media.llamasavers.com``.
+- Allow the user to perform the following actions on the bucket:
+   - ``s3:ListBucket``
+   - ``s3:GetBucketLocation``
+   - ``s3:ListBucketMultipartUploads``
+   - ``s3:ListBucketVersions``
+- Allow the user to perform all the actions (``s3:*``) on the objects within the
   bucket.
-* Allow the internet traffic to access Wagtail image renditions (``images/*``).
+- Allow the internet traffic to access Wagtail image renditions (``images/*``).
 
 The user permissions can be set in the IAM or via a bucket policy. See example
 of all of those points being achieved in the bucket policy below.
