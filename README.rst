@@ -14,8 +14,7 @@ package will be useful if you want to:
 - Use AWS S3 bucket for hosting Wagtail documents.
 - Put the bucket behind the CDN so that the bucket is not called directly each
   time.
-- Allow editors to use privacy controls on documents, whilst using CDN
-  CDN.
+- Allow editors to use privacy controls on documents, whilst using CDN.
 - Avoid time-outs because of downloads being proxied through Wagtail views.
 
   *Note: you cannot use the document* `redirect view`__ *if you want your documents to be truly private.*
