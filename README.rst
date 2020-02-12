@@ -1,3 +1,5 @@
+.. image:: https://github.com/torchbox/wagtail-storages/raw/master/logo.png
+
 wagtail-storages
 ================
 
