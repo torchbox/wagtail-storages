@@ -1,4 +1,4 @@
-0.0.4 - 12st February 2020
+0.0.4 - 12th February 2020
 --------------------------
 * Add logo to the README.
 * Add Content-Disposition header to signed S3 URLs for documents.
