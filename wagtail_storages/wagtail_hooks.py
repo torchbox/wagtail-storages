@@ -25,7 +25,13 @@ def serve_document_from_s3(document, request):
     if document.collection.get_view_restrictions():
         backend_class = backends.get_private_s3_boto3_document_storage_backend_class()
         backend = backend_class()
-        file_url = backend.url(document.file.name)
+        content_disposition = f"attachment; filename={document.filename}"
+        file_url = backend.url(
+            document.file.name,
+            # Add Content-Disposition header to avoid users seeing signed URLs
+            # in their web browser address bar.
+            parameters={"ResponseContentDisposition": content_disposition},
+        )
     else:
         file_url = document.file.url
 
