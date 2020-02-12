@@ -47,6 +47,6 @@ class TestWagtailHooks(TestCase):
         response = serve_document_from_s3(document, request)
         self.assertEqual(response.status_code, 302)
         self.assertIn("cache-control", response)
-        self.assertEqual(
-            response["cache-control"], "max-age=0, no-cache, no-store, must-revalidate"
+        self.assertIn(
+            "max-age=0, no-cache, no-store, must-revalidate", response["cache-control"]
         )
