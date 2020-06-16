@@ -1,5 +1,5 @@
 from wagtail.core.models import Collection, CollectionViewRestriction
-from wagtail.documents.models import get_document_model
+from wagtail.documents import get_document_model
 
 import factory
 import factory.django
