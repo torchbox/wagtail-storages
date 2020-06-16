@@ -5,7 +5,7 @@ from django.core.files.storage import get_storage_class
 
 from wagtail.contrib.frontend_cache.utils import PurgeBatch
 from wagtail.core.models import Site
-from wagtail.documents.models import get_document_model
+from wagtail.documents import get_document_model
 
 import storages.backends.s3boto3
 
