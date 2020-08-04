@@ -2,6 +2,11 @@ import django
 
 import wagtail
 
+if wagtail.VERSION < (2, 8):
+    from wagtail.documents.models import get_document_model
+else:
+    from wagtail.documents import get_document_model
+
 from wagtail_storages import backends, utils
 
 HOOK_ORDER = getattr(django.conf.settings, "WAGTAIL_STORAGES_DOCUMENT_HOOK_ORDER", 100)
@@ -15,9 +20,7 @@ def serve_document_from_s3(document, request):
 
     # Send document_served signal.
     wagtail.documents.models.document_served.send(
-        sender=wagtail.documents.models.get_document_model(),
-        instance=document,
-        request=request,
+        sender=get_document_model(), instance=document, request=request,
     )
 
     # If document has restrictions, generate a signed URL, otherwise
