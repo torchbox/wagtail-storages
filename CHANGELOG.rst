@@ -1,3 +1,7 @@
+0.0.6 - 4th August 2020
+-----------------------
+* Fix server crashing on serving a document.
+
 0.0.5 - 4th August 2020
 -----------------------
 * Add compatibility for Wagtail 2.9
