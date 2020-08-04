@@ -1,3 +1,7 @@
+0.0.5 - 4th August 2020
+-----------------------
+* Add compatibility for Wagtail 2.9
+
 0.0.4 - 12th February 2020
 --------------------------
 * Add logo to the README.
