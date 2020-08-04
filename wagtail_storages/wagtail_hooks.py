@@ -20,9 +20,7 @@ def serve_document_from_s3(document, request):
 
     # Send document_served signal.
     wagtail.documents.models.document_served.send(
-        sender=get_document_model(),
-        instance=document,
-        request=request,
+        sender=get_document_model(), instance=document, request=request,
     )
 
     # If document has restrictions, generate a signed URL, otherwise
