@@ -14,7 +14,10 @@ Document = get_document_model()
 
 class DocumentFactory(factory.django.DjangoModelFactory):
     title = factory.Sequence(lambda n: "Document" + str(n))
-    file = factory.django.FileField(filename="testfile.txt", data=b"Test document",)
+    file = factory.django.FileField(
+        filename="testfile.txt",
+        data=b"Test document",
+    )
     collection = factory.SubFactory("wagtail_storages.factories.CollectionFactory")
 
     class Meta:

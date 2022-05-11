@@ -28,7 +28,9 @@ def update_collection_document_acls(collection):
     documents = get_document_model().objects.filter(collection=collection)
     for document in documents:
         logger.debug(
-            'Set document ACL to "%s" on "%s"', acl, document.file.name,
+            'Set document ACL to "%s" on "%s"',
+            acl,
+            document.file.name,
         )
         document.file.file.obj.Acl().put(ACL=acl)
 
@@ -49,7 +51,10 @@ def build_absolute_urls_for_all_sites_for_path(path):
 
 
 def is_s3_boto3_storage_used():
-    return issubclass(get_storage_class(), storages.backends.s3boto3.S3Boto3Storage,)
+    return issubclass(
+        get_storage_class(),
+        storages.backends.s3boto3.S3Boto3Storage,
+    )
 
 
 def get_frontend_cache_configuration():
@@ -78,7 +83,8 @@ def purge_collection_documents_from_cache(collection):
     if not collection.get_view_restrictions():
         return
     logger.debug(
-        'Purge documents of collection "%s" from the front-end cache', collection.name,
+        'Purge documents of collection "%s" from the front-end cache',
+        collection.name,
     )
     # Purge download URLs and actual files if they possibly used to be public.
     wagtail_batch = PurgeBatch()

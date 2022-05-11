@@ -49,7 +49,10 @@ class AmazonS3DocumentTests(TestCase):
         self.assertTrue(self.check_s3_url(document.file.url))
 
         # Load the document
-        url = reverse("wagtaildocs_serve", args=(document.id, document.filename),)
+        url = reverse(
+            "wagtaildocs_serve",
+            args=(document.id, document.filename),
+        )
         response = self.client.get(url)
 
         # Test wagtail redirects to S3.
@@ -77,7 +80,10 @@ class AmazonS3DocumentTests(TestCase):
         s.save()
 
         # Load the document
-        url = reverse("wagtaildocs_serve", args=(document.id, document.filename),)
+        url = reverse(
+            "wagtaildocs_serve",
+            args=(document.id, document.filename),
+        )
         response = self.client.get(url)
 
         # Test wagtail redirects to S3.
