@@ -12,11 +12,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "wagtail.admin",
     "wagtail.documents",
     "wagtail.users",
     "wagtail.core",
     "wagtail.contrib.frontend_cache",
-    "wagtail_storages",
+    "wagtail_storages.apps.WagtailStoragesConfig",
     "storages",
     "taggit",
 ]

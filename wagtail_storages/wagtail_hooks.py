@@ -1,11 +1,7 @@
 import django
 
 import wagtail
-
-if wagtail.VERSION < (2, 8):
-    from wagtail.documents.models import get_document_model
-else:
-    from wagtail.documents import get_document_model
+from wagtail.documents import get_document_model
 
 from wagtail_storages import backends, utils
 
