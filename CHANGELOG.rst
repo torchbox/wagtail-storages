@@ -1,4 +1,4 @@
-UNRELEASED
+0.5rc1 - 11th May 2022
 ----------
 
 * Make Wagtail 2.15 and 2.16 the only supported version.
