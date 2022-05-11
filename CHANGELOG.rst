@@ -1,3 +1,9 @@
+UNRELEASED
+----------
+
+* Make Wagtail 2.15 and 2.16 the only supported version.
+* Configure GitHub Actions.
+
 0.0.6 - 4th August 2020
 -----------------------
 * Fix server crashing on serving a document.
