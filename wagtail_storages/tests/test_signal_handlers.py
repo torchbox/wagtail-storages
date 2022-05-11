@@ -20,6 +20,7 @@ from wagtail_storages.signal_handlers import (
     update_document_acls_when_collection_saved,
     update_document_acls_when_document_saved,
 )
+from wagtail_storages.tests.base import CreateBucket
 from wagtail_storages.tests.utils import is_s3_object_is_public
 
 
@@ -39,7 +40,7 @@ class TestDecorators(TestCase):
 
 
 @mock_s3
-class TestUpdateDocumentAclsWhenCollectionSaved(TestCase):
+class TestUpdateDocumentAclsWhenCollectionSaved(CreateBucket, TestCase):
     @factory.django.mute_signals(post_save)
     def test_s3_object_acl_set_to_public(self):
         document = DocumentFactory()
@@ -60,7 +61,7 @@ class TestUpdateDocumentAclsWhenCollectionSaved(TestCase):
 
 
 @mock_s3
-class TestUpdateDocumentAclsWhenDocumentSaved(TestCase):
+class TestUpdateDocumentAclsWhenDocumentSaved(CreateBucket, TestCase):
     @factory.django.mute_signals(post_save)
     def test_s3_object_acl_set_to_public(self):
         document = DocumentFactory()
@@ -80,7 +81,7 @@ class TestUpdateDocumentAclsWhenDocumentSaved(TestCase):
 
 
 @mock_s3
-class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(TestCase):
+class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(CreateBucket, TestCase):
     @override_settings(
         WAGTAILFRONTENDCACHE={
             "varnish": {
@@ -135,7 +136,7 @@ class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(TestCase):
 
 
 @mock_s3
-class TestPurgeDocumentFromCacheWhenSaved(TestCase):
+class TestPurgeDocumentFromCacheWhenSaved(CreateBucket, TestCase):
     @override_settings(
         WAGTAILFRONTENDCACHE={
             "varnish": {

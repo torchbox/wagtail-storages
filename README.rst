@@ -257,7 +257,7 @@ Add ``wagtail_storages`` to your ``INSTALLED_APPS`` in your settings file.
 
    INSTALLED_APPS = [
        # ... Other apps
-       "wagtail_storages",
+       "wagtail_storages.apps.WagtailStoragesConfig",
        # ... Other apps
    ]
 
