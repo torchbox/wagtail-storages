@@ -1,4 +1,4 @@
-.. image:: https://github.com/torchbox/wagtail-storages/raw/master/logo.png
+.. image:: https://github.com/torchbox/wagtail-storages/raw/main/logo.png
 
 wagtail-storages
 ================
