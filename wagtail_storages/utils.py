@@ -9,7 +9,7 @@ from wagtail.contrib.frontend_cache.utils import PurgeBatch
 if WAGTAIL_VERSION >= (3, 0):
     from wagtail.models import Site
 else:
-    from wagtail.core.models import Collection
+    from wagtail.core.models import Site
 
 
 if WAGTAIL_VERSION < (2, 8):
