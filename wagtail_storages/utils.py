@@ -5,7 +5,12 @@ from django.core.files.storage import get_storage_class
 
 from wagtail import VERSION as WAGTAIL_VERSION
 from wagtail.contrib.frontend_cache.utils import PurgeBatch
-from wagtail.core.models import Site
+
+if WAGTAIL_VERSION >= (3, 0):
+    from wagtail.models import Site
+else:
+    from wagtail.core.models import Collection
+
 
 if WAGTAIL_VERSION < (2, 8):
     from wagtail.documents.models import get_document_model
