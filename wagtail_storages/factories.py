@@ -1,8 +1,12 @@
 from wagtail import VERSION as WAGTAIL_VERSION
-from wagtail.core.models import Collection, CollectionViewRestriction
 
 import factory
 import factory.django
+
+if WAGTAIL_VERSION >= (3, 0):
+    from wagtail.models import Collection, CollectionViewRestriction
+else:
+    from wagtail.core.models import Collection, CollectionViewRestriction
 
 if WAGTAIL_VERSION < (2, 8):
     from wagtail.documents.models import get_document_model

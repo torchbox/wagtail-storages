@@ -4,7 +4,11 @@ import logging
 from django.db.models.signals import post_save, pre_delete
 
 from wagtail import VERSION as WAGTAIL_VERSION
-from wagtail.core.models import Collection
+
+if WAGTAIL_VERSION >= (3, 0):
+    from wagtail.models import Collection
+else:
+    from wagtail.core.models import Collection
 
 if WAGTAIL_VERSION < (2, 8):
     from wagtail.documents.models import get_document_model
