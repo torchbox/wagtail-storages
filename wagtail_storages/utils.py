@@ -3,19 +3,19 @@ import logging
 from django.conf import settings
 from django.core.files.storage import get_storage_class
 
-from wagtail import VERSION as WAGTAIL_VERSION
 from wagtail.contrib.frontend_cache.utils import PurgeBatch
 
-if WAGTAIL_VERSION >= (3, 0):
+try:
     from wagtail.models import Site
-else:
+except ImportError:
+    # Wagtail<3.0
     from wagtail.core.models import Site
 
-
-if WAGTAIL_VERSION < (2, 8):
-    from wagtail.documents.models import get_document_model
-else:
+try:
     from wagtail.documents import get_document_model
+except ImportError:
+    # Wagtail<2.8
+    from wagtail.documents.models import get_document_model
 
 import storages.backends.s3boto3
 
