@@ -1,17 +1,18 @@
 import django
 
 import wagtail
-from wagtail import VERSION as WAGTAIL_VERSION
 
-if WAGTAIL_VERSION >= (3, 0):
+try:
     from wagtail.hooks import register
-else:
+except ImportError:
+    # Wagtail<3.0
     from wagtail.core.hooks import register
 
-if WAGTAIL_VERSION < (2, 8):
-    from wagtail.documents.models import get_document_model
-else:
+try:
     from wagtail.documents import get_document_model
+except ImportError:
+    # Wagtail<2.8
+    from wagtail.documents.models import get_document_model
 
 from wagtail_storages import backends, utils
 

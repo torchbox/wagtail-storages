@@ -1,11 +1,11 @@
 from django.core.management.base import BaseCommand, CommandError
 
-from wagtail import VERSION as WAGTAIL_VERSION
-
-if WAGTAIL_VERSION >= (3, 0):
+try:
     from wagtail.models import Collection
-else:
+except ImportError:
+    # Wagtail<3.0
     from wagtail.core.models import Collection
+
 
 from wagtail_storages.utils import (
     is_s3_boto3_storage_used,

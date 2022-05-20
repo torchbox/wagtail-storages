@@ -3,17 +3,18 @@ import logging
 
 from django.db.models.signals import post_save, pre_delete
 
-from wagtail import VERSION as WAGTAIL_VERSION
-
-if WAGTAIL_VERSION >= (3, 0):
+try:
     from wagtail.models import Collection
-else:
+except ImportError:
+    # Wagtail<3.0
     from wagtail.core.models import Collection
 
-if WAGTAIL_VERSION < (2, 8):
-    from wagtail.documents.models import get_document_model
-else:
+try:
     from wagtail.documents import get_document_model
+except ImportError:
+    # Wagtail<2.8
+    from wagtail.documents.models import get_document_model
+
 
 from wagtail_storages.utils import (
     is_s3_boto3_storage_used,
