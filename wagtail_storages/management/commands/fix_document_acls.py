@@ -1,6 +1,11 @@
 from django.core.management.base import BaseCommand, CommandError
 
-from wagtail.core.models import Collection
+try:
+    from wagtail.models import Collection
+except ImportError:
+    # Wagtail<3.0
+    from wagtail.core.models import Collection
+
 
 from wagtail_storages.utils import (
     is_s3_boto3_storage_used,
