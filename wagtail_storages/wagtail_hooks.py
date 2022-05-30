@@ -1,14 +1,25 @@
 import django
 
 import wagtail
-from wagtail.documents import get_document_model
+
+try:
+    from wagtail.hooks import register
+except ImportError:
+    # Wagtail<3.0
+    from wagtail.core.hooks import register
+
+try:
+    from wagtail.documents import get_document_model
+except ImportError:
+    # Wagtail<2.8
+    from wagtail.documents.models import get_document_model
 
 from wagtail_storages import backends, utils
 
 HOOK_ORDER = getattr(django.conf.settings, "WAGTAIL_STORAGES_DOCUMENT_HOOK_ORDER", 100)
 
 
-@wagtail.core.hooks.register("before_serve_document", order=HOOK_ORDER)
+@register("before_serve_document", order=HOOK_ORDER)
 def serve_document_from_s3(document, request):
     # Skip this hook if not using django-storages boto3 backend.
     if not utils.is_s3_boto3_storage_used():

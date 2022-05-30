@@ -1,13 +1,17 @@
-from wagtail import VERSION as WAGTAIL_VERSION
-from wagtail.core.models import Collection, CollectionViewRestriction
-
 import factory
 import factory.django
 
-if WAGTAIL_VERSION < (2, 8):
-    from wagtail.documents.models import get_document_model
-else:
+try:
+    from wagtail.models import Collection, CollectionViewRestriction
+except ImportError:
+    # Wagtail<3.0
+    from wagtail.core.models import Collection, CollectionViewRestriction
+
+try:
     from wagtail.documents import get_document_model
+except ImportError:
+    # Wagtail<2.8
+    from wagtail.documents.models import get_document_model
 
 Document = get_document_model()
 

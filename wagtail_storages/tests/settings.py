@@ -2,6 +2,8 @@ import os
 
 import django.utils.crypto
 
+from wagtail import VERSION as WAGTAIL_VERSION
+
 TESTS_PATH = os.path.dirname(os.path.abspath(__file__))
 
 SECRET_KEY = django.utils.crypto.get_random_string(50)
@@ -15,7 +17,7 @@ INSTALLED_APPS = [
     "wagtail.admin",
     "wagtail.documents",
     "wagtail.users",
-    "wagtail.core",
+    "wagtail" if WAGTAIL_VERSION >= (3, 0) else "wagtail.core",
     "wagtail.contrib.frontend_cache",
     "wagtail_storages.apps.WagtailStoragesConfig",
     "storages",
