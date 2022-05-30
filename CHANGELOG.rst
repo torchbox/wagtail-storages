@@ -1,5 +1,5 @@
-UNRELEASED
------------------------
+0.5.1rc1 - 30th May 2022
+------------------------
 * Support Wagtail 3.0.
 * Support Django 4.0.
 
