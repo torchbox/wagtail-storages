@@ -66,3 +66,6 @@ DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
 ]
+
+if WAGTAIL_VERSION >= (3, 0):
+    WAGTAILADMIN_BASE_URL = "http://example.com"
