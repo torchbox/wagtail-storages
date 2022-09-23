@@ -1,3 +1,7 @@
+Unreleased
+----------
+* Support Wagtail 4
+
 0.5.1rc1 - 30th May 2022
 ------------------------
 * Support Wagtail 3.0.
