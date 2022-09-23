@@ -1,7 +1,7 @@
+from wagtail.documents import get_document_model
+
 import factory
 import factory.django
-
-from wagtail.documents import get_document_model
 
 try:
     from wagtail.models import Collection, CollectionViewRestriction

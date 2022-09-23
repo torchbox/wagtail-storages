@@ -1,6 +1,6 @@
 import django
-import wagtail
 
+import wagtail
 from wagtail.documents import get_document_model
 
 try:
