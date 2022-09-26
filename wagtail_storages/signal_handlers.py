@@ -46,12 +46,16 @@ def update_document_acls_when_collection_saved(sender, instance, **kwargs):
 
 @skip_if_s3_storage_not_used
 def update_document_acls_when_document_saved(sender, instance, **kwargs):
-    update_document_acl(instance)
+    update_fields = kwargs.get("update_fields")
+    if not update_fields or "collection" in update_fields or "file" in update_fields:
+        update_document_acl(instance)
 
 
 @skip_if_s3_storage_not_used
 def purge_document_from_cache_when_saved(sender, instance, **kwargs):
-    purge_document_from_cache(instance)
+    update_fields = kwargs.get("update_fields")
+    if not update_fields or "collection" in update_fields or "file" in update_fields:
+        purge_document_from_cache(instance)
 
 
 @skip_if_s3_storage_not_used
