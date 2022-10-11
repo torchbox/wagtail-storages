@@ -1,6 +1,7 @@
 Unreleased
 ----------
-* Support Wagtail 4
+* Support Wagtail 4 (#33 - @nickmoreton)
+* Avoid unnecessary cache purges (#34 - @ababic)
 
 0.5.1rc1 - 30th May 2022
 ------------------------
