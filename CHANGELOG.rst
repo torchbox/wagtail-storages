@@ -1,4 +1,4 @@
-Unreleased
+1.0.0rc1 - 11th October 2022
 ----------
 * Support Wagtail 4 (#33 - @nickmoreton)
 * Avoid unnecessary cache purges (#34 - @ababic)
