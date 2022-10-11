@@ -3,17 +3,13 @@ import logging
 
 from django.db.models.signals import post_save, pre_delete
 
+from wagtail.documents import get_document_model
+
 try:
     from wagtail.models import Collection
 except ImportError:
     # Wagtail<3.0
     from wagtail.core.models import Collection
-
-try:
-    from wagtail.documents import get_document_model
-except ImportError:
-    # Wagtail<2.8
-    from wagtail.documents.models import get_document_model
 
 
 from wagtail_storages.utils import (

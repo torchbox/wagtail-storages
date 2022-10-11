@@ -1,18 +1,13 @@
 import django
 
 import wagtail
+from wagtail.documents import get_document_model
 
 try:
     from wagtail.hooks import register
 except ImportError:
     # Wagtail<3.0
     from wagtail.core.hooks import register
-
-try:
-    from wagtail.documents import get_document_model
-except ImportError:
-    # Wagtail<2.8
-    from wagtail.documents.models import get_document_model
 
 from wagtail_storages import backends, utils
 

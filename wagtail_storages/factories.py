@@ -1,3 +1,5 @@
+from wagtail.documents import get_document_model
+
 import factory
 import factory.django
 
@@ -7,11 +9,6 @@ except ImportError:
     # Wagtail<3.0
     from wagtail.core.models import Collection, CollectionViewRestriction
 
-try:
-    from wagtail.documents import get_document_model
-except ImportError:
-    # Wagtail<2.8
-    from wagtail.documents.models import get_document_model
 
 Document = get_document_model()
 
