@@ -33,41 +33,83 @@ jobs:
     strategy:
       matrix:
         include:
-          - toxenv: "py37-dj30-wagtail215"
+          - toxenv: "py37-dj32-wagtail41"
             python-version: "3.7"
             experimental: false
-          - toxenv: "py38-dj31-wagtail215"
+          - toxenv: "py38-dj32-wagtail41"
             python-version: "3.8"
             experimental: false
-          - toxenv: "py39-dj32-wagtail215"
+          - toxenv: "py38-dj32-wagtail42"
+            python-version: "3.8"
+            experimental: false
+          - toxenv: "py38-dj40-wagtail41"
+            python-version: "3.8"
+            experimental: false
+          - toxenv: "py38-dj40-wagtail42"
+            python-version: "3.8"
+            experimental: false
+          - toxenv: "py38-dj41-wagtail41"
+            python-version: "3.8"
+            experimental: false
+          - toxenv: "py38-dj41-wagtail42"
+            python-version: "3.8"
+            experimental: false
+          - toxenv: "py39-dj32-wagtail41"
             python-version: "3.9"
             experimental: false
-          - toxenv: "py310-dj32-wagtail215"
-            python-version: "3.10"
-            experimental: false
-          - toxenv: "py39-dj32-wagtail216"
+          - toxenv: "py39-dj32-wagtail42"
             python-version: "3.9"
             experimental: false
-          - toxenv: "py310-dj40-wagtail216"
-            python-version: "3.10"
-            experimental: false
-          - toxenv: "py39-dj32-wagtail30"
+          - toxenv: "py39-dj40-wagtail41"
             python-version: "3.9"
             experimental: false
-          - toxenv: "py310-dj40-wagtail30"
-            python-version: "3.10"
-            experimental: false
-          - toxenv: "py39-dj32-wagtail40"
+          - toxenv: "py39-dj40-wagtail42"
             python-version: "3.9"
             experimental: false
-          - toxenv: "py310-dj40-wagtail40"
+          - toxenv: "py39-dj41-wagtail41"
+            python-version: "3.9"
+            experimental: false
+          - toxenv: "py39-dj41-wagtail42"
+            python-version: "3.9"
+            experimental: false
+          - toxenv: "py310-dj32-wagtail41"
             python-version: "3.10"
             experimental: false
-          - toxenv: "py310-dj41-wagtail40"
+          - toxenv: "py310-dj32-wagtail42"
             python-version: "3.10"
             experimental: false
-          - toxenv: "py310-dj41-wagtailmain"
+          - toxenv: "py310-dj40-wagtail41"
             python-version: "3.10"
+            experimental: false
+          - toxenv: "py310-dj40-wagtail42"
+            python-version: "3.10"
+            experimental: false
+          - toxenv: "py310-dj41-wagtail41"
+            python-version: "3.10"
+            experimental: false
+          - toxenv: "py310-dj41-wagtail42"
+            python-version: "3.10"
+            experimental: false
+          - toxenv: "py311-dj32-wagtail41"
+            python-version: "3.11"
+            experimental: false
+          - toxenv: "py311-dj32-wagtail42"
+            python-version: "3.11"
+            experimental: false
+          - toxenv: "py311-dj40-wagtail41"
+            python-version: "3.11"
+            experimental: false
+          - toxenv: "py311-dj40-wagtail42"
+            python-version: "3.11"
+            experimental: false
+          - toxenv: "py311-dj41-wagtail41"
+            python-version: "3.11"
+            experimental: false
+          - toxenv: "py311-dj41-wagtail42"
+            python-version: "3.11"
+            experimental: false
+          - toxenv: "py311-dj41-wagtailmain"
+            python-version: "3.11"
             experimental: true
     runs-on: ubuntu-latest
     steps:

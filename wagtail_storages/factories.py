@@ -1,14 +1,8 @@
 from wagtail.documents import get_document_model
+from wagtail.models import Collection, CollectionViewRestriction
 
 import factory
 import factory.django
-
-try:
-    from wagtail.models import Collection, CollectionViewRestriction
-except ImportError:
-    # Wagtail<3.0
-    from wagtail.core.models import Collection, CollectionViewRestriction
-
 
 Document = get_document_model()
 

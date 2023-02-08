@@ -1,3 +1,9 @@
+Unreleased
+----------
+* Support Wagtail 4.2 (@katdom13)
+* Drop support for Wagtail versions prior to 4.1 (@katdom13)
+* Removed code conditionals (@katdom13)
+
 1.0.0rc1 - 11th October 2022
 ----------
 * Support Wagtail 4 (#33 - @nickmoreton)

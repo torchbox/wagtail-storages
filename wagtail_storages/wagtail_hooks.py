@@ -2,12 +2,7 @@ import django
 
 import wagtail
 from wagtail.documents import get_document_model
-
-try:
-    from wagtail.hooks import register
-except ImportError:
-    # Wagtail<3.0
-    from wagtail.core.hooks import register
+from wagtail.hooks import register
 
 from wagtail_storages import backends, utils
 
