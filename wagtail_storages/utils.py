@@ -5,13 +5,7 @@ from django.core.files.storage import get_storage_class
 
 from wagtail.contrib.frontend_cache.utils import PurgeBatch
 from wagtail.documents import get_document_model
-
-try:
-    from wagtail.models import Site
-except ImportError:
-    # Wagtail<3.0
-    from wagtail.core.models import Site
-
+from wagtail.models import Site
 
 import storages.backends.s3boto3
 

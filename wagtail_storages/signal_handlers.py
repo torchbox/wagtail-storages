@@ -4,13 +4,7 @@ import logging
 from django.db.models.signals import post_save, pre_delete
 
 from wagtail.documents import get_document_model
-
-try:
-    from wagtail.models import Collection
-except ImportError:
-    # Wagtail<3.0
-    from wagtail.core.models import Collection
-
+from wagtail.models import Collection
 
 from wagtail_storages.utils import (
     is_s3_boto3_storage_used,

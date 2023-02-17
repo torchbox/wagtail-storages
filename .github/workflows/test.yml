@@ -29,63 +29,23 @@ jobs:
         run: tox
 
   test:
-    continue-on-error: ${{ matrix.experimental }}
-    strategy:
-      matrix:
-        include:
-          - toxenv: "py37-dj30-wagtail215"
-            python-version: "3.7"
-            experimental: false
-          - toxenv: "py38-dj31-wagtail215"
-            python-version: "3.8"
-            experimental: false
-          - toxenv: "py39-dj32-wagtail215"
-            python-version: "3.9"
-            experimental: false
-          - toxenv: "py310-dj32-wagtail215"
-            python-version: "3.10"
-            experimental: false
-          - toxenv: "py39-dj32-wagtail216"
-            python-version: "3.9"
-            experimental: false
-          - toxenv: "py310-dj40-wagtail216"
-            python-version: "3.10"
-            experimental: false
-          - toxenv: "py39-dj32-wagtail30"
-            python-version: "3.9"
-            experimental: false
-          - toxenv: "py310-dj40-wagtail30"
-            python-version: "3.10"
-            experimental: false
-          - toxenv: "py39-dj32-wagtail40"
-            python-version: "3.9"
-            experimental: false
-          - toxenv: "py310-dj40-wagtail40"
-            python-version: "3.10"
-            experimental: false
-          - toxenv: "py310-dj41-wagtail40"
-            python-version: "3.10"
-            experimental: false
-          - toxenv: "py310-dj41-wagtailmain"
-            python-version: "3.10"
-            experimental: true
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
-
+          python-version: ${{ matrix.python }}
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install tox
-
-      - name: Run tox - ${{ matrix.toxenv }}
-        env:
-          TOXENV: ${{ matrix.toxenv }}
+          python -m pip install tox tox-gh-actions
+      - name: Test with tox
         run: tox
 
   build:
