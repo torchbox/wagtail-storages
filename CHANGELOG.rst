@@ -1,5 +1,8 @@
 Unreleased
 ----------
+
+1.0.0 - 27th July 2023
+----------------------
 * Support Wagtail 4.2 (@katdom13)
 * Drop support for Wagtail versions prior to 4.1 (@katdom13)
 * Updated test workflow to use tox-gh-actions (@katdom13)
