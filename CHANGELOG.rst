@@ -1,6 +1,8 @@
 Unreleased
 ----------
 
+* Update for Wagtail 5.1
+
 1.0.0 - 27th July 2023
 ----------------------
 * Support Wagtail 4.2 (@katdom13)
