@@ -1,5 +1,7 @@
 Unreleased
 ----------
+* Drop support for Wagtail versions 4.2 and 5.0 (@katdom13)
+* Support for Wagtail 5.2 (@katdom13)
 
 * Update for Wagtail 5.1
 
