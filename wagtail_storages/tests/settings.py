@@ -2,6 +2,8 @@ import os
 
 import django.utils.crypto
 
+from wagtail import VERSION as WAGTAIL_VERSION
+
 TESTS_PATH = os.path.dirname(os.path.abspath(__file__))
 
 SECRET_KEY = django.utils.crypto.get_random_string(50)
@@ -43,6 +45,13 @@ DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": "db.sql
 MEDIA_ROOT = os.path.join(TESTS_PATH, "media")
 
 STATIC_ROOT = os.path.join(TESTS_PATH, "static")
+
+if WAGTAIL_VERSION >= (5, 2):
+    # when running tests with Wagtail 5.2+, we need to set the STATIC_URL explicitly,
+    # otherwise the test server will not start.
+    # This happens when running tests against the main branch of Wagtail
+    # so I am assuming that an upcoming release will require this.
+    STATIC_URL = "/static/"
 
 ROOT_URLCONF = "wagtail_storages.tests.urls"
 
