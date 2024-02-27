@@ -68,7 +68,14 @@ AWS_S3_CUSTOM_DOMAIN = "media.torchbox.com"
 
 AWS_STORAGE_BUCKET_NAME = "test"
 
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",

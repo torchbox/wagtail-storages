@@ -49,7 +49,7 @@ class AmazonS3DocumentTests(CreateBucket, TestCase):
         response = self.client.get(url)
 
         # Test wagtail redirects to S3.
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url)
         # Check object is public
         self.assertTrue(self.check_document_is_public(document))
@@ -80,7 +80,7 @@ class AmazonS3DocumentTests(CreateBucket, TestCase):
         response = self.client.get(url)
 
         # Test wagtail redirects to S3.
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url)
         # Check object is not public
         self.assertFalse(self.check_document_is_public(document))
