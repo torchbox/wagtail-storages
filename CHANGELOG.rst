@@ -1,5 +1,8 @@
 Unreleased
 ----------
+
+1.1.0 - 8th March 2024
+----------------------
 * Drop support for Wagtail < 5.2 (@katdom13)
 * Add support for Wagtail 6.0 (@katdom13)
 * Add support for Python 3.12 (@katdom13)
