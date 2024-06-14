@@ -2,7 +2,7 @@ Unreleased
 ----------
 
 * Add tests for Wagtail 6.1 (@katdom13)
-* Drop support for Django 4.2 (@katdom13)
+* Drop support for Django < 4.2 (@katdom13)
 
 1.1.0 - 8th March 2024
 ----------------------
