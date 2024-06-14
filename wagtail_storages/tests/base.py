@@ -1,10 +1,10 @@
 from django.conf import settings
 
 import boto3
-from moto import mock_s3
+from moto import mock_aws
 
 
-@mock_s3
+@mock_aws
 class CreateBucket:
     def setUp(self):
         bucket_name = settings.AWS_STORAGE_BUCKET_NAME
