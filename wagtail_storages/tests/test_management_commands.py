@@ -8,7 +8,7 @@ class TestFixDocumentAcls(TestCase):
         call_command("fix_document_acls")
 
     @override_settings(
-        DEFAULT_FILE_STORAGE="django.core.files.storage.FileSystemStorage"
+        STORAGES={"default": {"BACKEND": "django.core.files.storage.FileSystemStorage"}}
     )
     def test_call_fails_when_s3_boto3_storage_not_used(self):
         with self.assertRaisesRegex(

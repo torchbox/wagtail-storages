@@ -13,12 +13,14 @@ from wagtail_storages.utils import (
 
 class TestIsS3Boto3StorageUsed(TestCase):
     @override_settings(
-        DEFAULT_FILE_STORAGE="django.core.files.storage.FileSystemStorage"
+        STORAGES={"default": {"BACKEND": "django.core.files.storage.FileSystemStorage"}}
     )
     def test_should_return_false_if_not(self):
         self.assertIs(is_s3_boto3_storage_used(), False)
 
-    @override_settings(DEFAULT_FILE_STORAGE="storages.backends.s3boto3.S3Boto3Storage")
+    @override_settings(
+        STORAGES={"default": {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"}}
+    )
     def test_should_return_true_if_yes(self):
         self.assertIs(is_s3_boto3_storage_used(), True)
 

@@ -1,4 +1,4 @@
-from django.core.files.storage import get_storage_class
+from django.core.files.storage import default_storage
 from django.test import TestCase
 
 from storages.backends.s3boto3 import S3Boto3Storage
@@ -18,7 +18,7 @@ class TestGetPrivateBackendFunction(TestCase):
     def test_backend_overrides_settings(self):
         private_backend = self.backend_class()
 
-        default_backend = get_storage_class()()
+        default_backend = default_storage.__class__()
         self.assertIsInstance(default_backend, S3Boto3Storage)
 
         # Make sure querystring authentication is enabled and custom domain is

@@ -26,7 +26,7 @@ from wagtail_storages.tests.utils import is_s3_object_is_public
 
 class TestDecorators(TestCase):
     @override_settings(
-        DEFAULT_FILE_STORAGE="django.core.files.storage.FileSystemStorage"
+        STORAGES={"default": {"BACKEND": "django.core.files.storage.FileSystemStorage"}}
     )
     def test_skipping_s3_storage_decorator_with_non_s3_storage(self):
         mock = MagicMock()
