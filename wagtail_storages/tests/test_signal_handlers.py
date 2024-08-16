@@ -5,7 +5,7 @@ from django.db.models.signals import post_save
 from django.test import TestCase, override_settings
 
 import factory
-from moto import mock_s3
+from moto import mock_aws
 
 from wagtail_storages.factories import (
     CollectionFactory,
@@ -39,7 +39,7 @@ class TestDecorators(TestCase):
         mock.assert_called_once()
 
 
-@mock_s3
+@mock_aws
 class TestUpdateDocumentAclsWhenCollectionSaved(CreateBucket, TestCase):
     @factory.django.mute_signals(post_save)
     def test_s3_object_acl_set_to_public(self):
@@ -60,7 +60,7 @@ class TestUpdateDocumentAclsWhenCollectionSaved(CreateBucket, TestCase):
         self.assertFalse(is_s3_object_is_public(document.file.file.obj))
 
 
-@mock_s3
+@mock_aws
 class TestUpdateDocumentAclsWhenDocumentSaved(CreateBucket, TestCase):
     @factory.django.mute_signals(post_save)
     def test_s3_object_acl_set_to_public(self):
@@ -80,7 +80,7 @@ class TestUpdateDocumentAclsWhenDocumentSaved(CreateBucket, TestCase):
         self.assertFalse(is_s3_object_is_public(document.file.file.obj))
 
 
-@mock_s3
+@mock_aws
 class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(CreateBucket, TestCase):
     @override_settings(
         WAGTAILFRONTENDCACHE={
@@ -135,7 +135,7 @@ class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(CreateBucket, TestCa
         urlopen_mock.assert_not_called()
 
 
-@mock_s3
+@mock_aws
 class TestPurgeDocumentFromCacheWhenSaved(CreateBucket, TestCase):
     @override_settings(
         WAGTAILFRONTENDCACHE={

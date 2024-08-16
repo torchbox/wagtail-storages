@@ -3,14 +3,14 @@ from urllib.parse import urlparse
 from django.test import TestCase
 from django.urls import reverse
 
-from moto import mock_s3
+from moto import mock_aws
 
 from wagtail_storages.factories import CollectionViewRestrictionFactory, DocumentFactory
 from wagtail_storages.tests.base import CreateBucket
 from wagtail_storages.tests.utils import is_s3_object_is_public
 
 
-@mock_s3
+@mock_aws
 class AmazonS3DocumentTests(CreateBucket, TestCase):
     def check_s3_url(self, url):
         return "s3.amazonaws.com" in url or "media.torchbox.com" in url
