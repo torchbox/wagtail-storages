@@ -1,6 +1,8 @@
 Unreleased
 ----------
 
+* Drop support for Python 3.8 and 3.9 (@tm-kn)
+* Add support for Django 5.1 (@PetrDlouhy)
 * Add tests for Wagtail 6.1 (@katdom13)
 * Drop support for Django < 4.2 (@katdom13)
 
