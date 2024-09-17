@@ -1,7 +1,7 @@
 import logging
 
 from django.conf import settings
-from django.core.files.storage import get_storage_class
+from django.core.files.storage import default_storage
 
 from wagtail.contrib.frontend_cache.utils import PurgeBatch
 from wagtail.documents import get_document_model
@@ -47,7 +47,7 @@ def build_absolute_urls_for_all_sites_for_path(path):
 
 def is_s3_boto3_storage_used():
     return issubclass(
-        get_storage_class(),
+        default_storage.__class__,
         storages.backends.s3boto3.S3Boto3Storage,
     )
 

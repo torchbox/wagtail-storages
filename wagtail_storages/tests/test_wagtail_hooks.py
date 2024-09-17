@@ -12,7 +12,7 @@ from wagtail_storages.wagtail_hooks import serve_document_from_s3
 @mock_aws
 class TestWagtailHooks(CreateBucket, TestCase):
     @override_settings(
-        DEFAULT_FILE_STORAGE="django.core.files.storage.FileSystemStorage"
+        STORAGES={"default": {"BACKEND": "django.core.files.storage.FileSystemStorage"}}
     )
     def test_non_s3_storage_returns_no_response(self):
         # The hook should not return a response if S3 storage is not being
