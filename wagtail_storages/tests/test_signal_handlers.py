@@ -4,6 +4,8 @@ from unittest.mock import MagicMock
 from django.db.models.signals import post_save
 from django.test import TestCase, override_settings
 
+import wagtail
+
 import factory
 from moto import mock_aws
 
@@ -22,6 +24,11 @@ from wagtail_storages.signal_handlers import (
 )
 from wagtail_storages.tests.base import CreateBucket
 from wagtail_storages.tests.utils import is_s3_object_is_public
+
+URLOPEN_PATH = "wagtail.contrib.frontend_cache.backends.http.urlopen"
+
+if wagtail.VERSION < (6, 2):
+    URLOPEN_PATH = "wagtail.contrib.frontend_cache.backends.urlopen"
 
 
 class TestDecorators(TestCase):
@@ -100,9 +107,7 @@ class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(CreateBucket, TestCa
     def test_cache_purged_for_private_collection(self):
         private_collection = CollectionViewRestrictionFactory().collection
         DocumentFactory(collection=private_collection)
-        with mock.patch(
-            "wagtail.contrib.frontend_cache.backends.http.urlopen"
-        ) as urlopen_mock:
+        with mock.patch(URLOPEN_PATH) as urlopen_mock:
             purge_documents_when_collection_saved_with_restrictions(
                 sender=private_collection._meta.model, instance=private_collection
             )
@@ -126,9 +131,7 @@ class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(CreateBucket, TestCa
     def test_cache_not_purged_for_public_collection(self):
         collection = CollectionFactory()
         DocumentFactory.create_batch(10, collection=collection)
-        with mock.patch(
-            "wagtail.contrib.frontend_cache.backends.http.urlopen"
-        ) as urlopen_mock:
+        with mock.patch(URLOPEN_PATH) as urlopen_mock:
             purge_documents_when_collection_saved_with_restrictions(
                 sender=collection._meta.model, instance=collection
             )
@@ -154,9 +157,7 @@ class TestPurgeDocumentFromCacheWhenSaved(CreateBucket, TestCase):
     @factory.django.mute_signals(post_save)
     def test_create_new_document_purges_cache_for_that_url(self):
         document = DocumentFactory()
-        with mock.patch(
-            "wagtail.contrib.frontend_cache.backends.http.urlopen"
-        ) as urlopen_mock:
+        with mock.patch(URLOPEN_PATH) as urlopen_mock:
             purge_document_from_cache_when_saved(
                 sender=document._meta.model, instance=document
             )
@@ -179,9 +180,7 @@ class TestPurgeDocumentFromCacheWhenSaved(CreateBucket, TestCase):
     @factory.django.mute_signals(post_save)
     def test_delete_document_purges_cache_for_that_url(self):
         document = DocumentFactory()
-        with mock.patch(
-            "wagtail.contrib.frontend_cache.backends.http.urlopen"
-        ) as urlopen_mock:
+        with mock.patch(URLOPEN_PATH) as urlopen_mock:
             purge_document_from_cache_when_deleted(
                 sender=document._meta.model, instance=document
             )
