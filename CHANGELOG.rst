@@ -1,6 +1,7 @@
 Unreleased
 ----------
 
+* Switch from BSD-2 to BSD-3 license (@tm-kn)
 * Drop support for Python 3.8 and 3.9 (@tm-kn)
 * Add support for Django 5.1 (@PetrDlouhy)
 * Add tests for Wagtail 6.1 (@katdom13)
