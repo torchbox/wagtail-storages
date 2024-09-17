@@ -7,3 +7,4 @@ wagtail_storages/tests/media/
 *.egg-info
 *.sqlite3
 .coverage
+.DS_Store
