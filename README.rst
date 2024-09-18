@@ -7,6 +7,9 @@ wagtail-storages
    :target: https://pypi.org/project/wagtail-storages/
 .. image:: https://img.shields.io/pypi/dm/wagtail-storages.svg
    :target: https://pypi.org/project/wagtail-storages/
+.. image:: https://github.com/torchbox/wagtail-storages/actions/workflows/test.yml/badge.svg?branch=main
+   :target: https://github.com/torchbox/wagtail-storages/actions/workflows/test.yml
+   :alt: Build Status
 
 This package fills the missing gap in using AWS S3 together with Wagtail. This
 package will be useful if you want to:
