@@ -1,5 +1,5 @@
-Unreleased
-----------
+2.0 - 18th September 2024
+-------------------------
 
 * Switch from BSD-2 to BSD-3 license (@tm-kn)
 * Drop support for Python 3.8 and 3.9 (@tm-kn)
