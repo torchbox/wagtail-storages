@@ -1,3 +1,9 @@
+unreleased
+----------
+
+- Wagtail 6.3 support/testing
+
+
 2.0 - 18th September 2024
 -------------------------
 
