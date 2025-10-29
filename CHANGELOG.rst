@@ -1,6 +1,8 @@
 Unreleased
 ----------
 
+* Add testing for Wagtail 7.1 (@damwaingames)
+* Remove support for Wagtail 6.4 (@damwaingames)
 * Add tests for Wagtail 6.3, 6.4 and Python 3.13 (@ianmeigh)
 * Update tests to consider tasks managed by django-tasks are now deferred until
   the current transaction is committed (@ianmeigh)
