@@ -1,8 +1,9 @@
-unreleased
+Unreleased
 ----------
 
-- Wagtail 6.3 support/testing
-
+* Add tests for Wagtail 6.3, 6.4 and Python 3.13 (@ianmeigh)
+* Update tests to consider tasks managed by django-tasks are now deferred until
+  the current transaction is committed (@ianmeigh)
 
 2.0 - 18th September 2024
 -------------------------

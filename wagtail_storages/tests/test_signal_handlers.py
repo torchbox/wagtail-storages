@@ -108,9 +108,10 @@ class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(CreateBucket, TestCa
         private_collection = CollectionViewRestrictionFactory().collection
         DocumentFactory(collection=private_collection)
         with mock.patch(URLOPEN_PATH) as urlopen_mock:
-            purge_documents_when_collection_saved_with_restrictions(
-                sender=private_collection._meta.model, instance=private_collection
-            )
+            with self.captureOnCommitCallbacks(execute=True):
+                purge_documents_when_collection_saved_with_restrictions(
+                    sender=private_collection._meta.model, instance=private_collection
+                )
         urlopen_mock.assert_called()
 
     @override_settings(
@@ -132,9 +133,10 @@ class TestPurgeDocumentsWhenCollectionSavedWithRestrictions(CreateBucket, TestCa
         collection = CollectionFactory()
         DocumentFactory.create_batch(10, collection=collection)
         with mock.patch(URLOPEN_PATH) as urlopen_mock:
-            purge_documents_when_collection_saved_with_restrictions(
-                sender=collection._meta.model, instance=collection
-            )
+            with self.captureOnCommitCallbacks(execute=True):
+                purge_documents_when_collection_saved_with_restrictions(
+                    sender=collection._meta.model, instance=collection
+                )
         urlopen_mock.assert_not_called()
 
 
@@ -158,9 +160,10 @@ class TestPurgeDocumentFromCacheWhenSaved(CreateBucket, TestCase):
     def test_create_new_document_purges_cache_for_that_url(self):
         document = DocumentFactory()
         with mock.patch(URLOPEN_PATH) as urlopen_mock:
-            purge_document_from_cache_when_saved(
-                sender=document._meta.model, instance=document
-            )
+            with self.captureOnCommitCallbacks(execute=True):
+                purge_document_from_cache_when_saved(
+                    sender=document._meta.model, instance=document
+                )
         urlopen_mock.assert_called()
 
     @override_settings(
@@ -181,7 +184,8 @@ class TestPurgeDocumentFromCacheWhenSaved(CreateBucket, TestCase):
     def test_delete_document_purges_cache_for_that_url(self):
         document = DocumentFactory()
         with mock.patch(URLOPEN_PATH) as urlopen_mock:
-            purge_document_from_cache_when_deleted(
-                sender=document._meta.model, instance=document
-            )
+            with self.captureOnCommitCallbacks(execute=True):
+                purge_document_from_cache_when_deleted(
+                    sender=document._meta.model, instance=document
+                )
         urlopen_mock.assert_called()
