@@ -1,4 +1,4 @@
-.. image:: https://github.com/torchbox/wagtail-storages/raw/main/logo.png
+.. image:: https://github.com/torchbox/wagtail-storages/raw/main/images/logo.png
 
 wagtail-storages
 ================
@@ -115,9 +115,14 @@ First, set up your S3 bucket. It must be configured to:
 - Allow the user to perform all the actions (``s3:*``) on the objects within the
   bucket.
 - Allow the internet traffic to access Wagtail image renditions (``images/*``).
-- Allow use of public ACLs, by disabling:
-   - "Block public access to buckets and objects granted through new access control lists (ACLs)"
-   - "Block public access to buckets and objects granted through any access control lists (ACLs)"
+- Allow use of public ACLs, by setting up the following Block public access:
+   - Deselect "Block public access to buckets and objects granted through new access control lists (ACLs)"
+   - Deselect "Block public access to buckets and objects granted through any access control lists (ACLs)"
+   - Select "Block public access to buckets and objects granted through new public bucket or access point policies"
+   - Select "Block public and cross-account access to buckets and objects through any public bucket or access point policies"
+
+.. image:: images/s3-block-public-access.png
+
 
 The user permissions can be set in the IAM or via a bucket policy. See example
 of all of those points being achieved in the bucket policy below.
