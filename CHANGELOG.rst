@@ -1,7 +1,8 @@
 Unreleased
 ----------
 
-* Add testing for Python 3.14 and Wagtail 7.2
+* Add testing for Python 3.14 and Wagtail 7.3
+* Drop support for Django 5.1
 * Add testing for Wagtail 7.1 (@damwaingames)
 * Remove support for Wagtail 6.4 (@damwaingames)
 * Add tests for Wagtail 6.3, 6.4 and Python 3.13 (@ianmeigh)
