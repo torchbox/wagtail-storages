@@ -6,6 +6,9 @@ Unreleased
 * Add tests for Wagtail 6.3, 6.4 and Python 3.13 (@ianmeigh)
 * Update tests to consider tasks managed by django-tasks are now deferred until
   the current transaction is committed (@ianmeigh)
+* Drop support for Wagtail < 7.0, Django < 5.2 
+* Add support for Django 6.0, Wagtail 7.4 LTS, and Python 3.14
+* Refresh development dependency pins (coverage, factory_boy, black)
 
 2.0 - 18th September 2024
 -------------------------
